@@ -22,7 +22,7 @@ export interface CustomMeasurements {
 
 export interface CartItem {
   id: string;
-  productId: number;
+  productId: string;
   name: string;
   price: number;
   size: string;
