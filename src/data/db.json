@@ -1,50 +1,14 @@
 {
   "users": {
-    "hellfighter2021@gmail.com": {
-      "username": "hellfighter2021@gmail.com",
-      "password": "PG27112005",
-      "cart": [],
-      "firstName": "Parth",
-      "lastName": "Goel",
-      "email": "hellfighter2021@gmail.com",
+    "parthgoel2005@gmail.com": {
+      "username": "parthgoel2005@gmail.com",
+      "password": "hello234",
+      "name": "Parth Goel",
       "phone": "07011058565",
-      "name": "Parth Goel"
-    },
-    "hellfighter2029@gmail.com": {
-      "username": "hellfighter2029@gmail.com",
-      "password": "PG27112005",
-      "name": "Parth",
+      "email": "parthgoel2005@gmail.com",
       "cart": []
     }
   },
-  "consultations": [
-    {
-      "id": "consultation_xhsysmyj7_1779654593311",
-      "name": "Parth Goel",
-      "email": "parthgoel2005@gmail.com",
-      "date": "2026-05-26",
-      "occasion": "Business",
-      "status": "cancelled",
-      "createdAt": "2026-05-24T20:29:53.311Z"
-    },
-    {
-      "id": "consultation_w997xrj7c_1779654735004",
-      "name": "Parth",
-      "email": "parthgoel2005@gmail.com",
-      "date": "2026-05-26",
-      "occasion": "Business",
-      "status": "cancelled",
-      "createdAt": "2026-05-24T20:32:15.004Z"
-    },
-    {
-      "id": "consultation_ye52zatgm_1779698759462",
-      "name": "Parth Goel",
-      "email": "parthgoel2005@gmail.com",
-      "phone": "07011058565",
-      "date": "2026-05-20",
-      "occasion": "Wedding",
-      "status": "confirmed",
-      "createdAt": "2026-05-25T08:45:59.463Z"
-    }
-  ]
+  "consultations": [],
+  "subscribers": []
 }

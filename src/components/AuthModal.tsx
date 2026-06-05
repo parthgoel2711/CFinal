@@ -1,11 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import { X, User, Lock, CheckCircle2 } from "lucide-react";
+import { X, User, Lock, CheckCircle2, Mail } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
 import Image from "next/image";
+import toast from "react-hot-toast";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -18,7 +19,8 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
   
   const [isSignUp, setIsSignUp] = useState(false);
   const [name, setName] = useState("");
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -33,7 +35,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     try {
       if (isSignUp) {
         // Register user and upload current guest cart
-        const dbCart = await register(name, username, password, items);
+        const dbCart = await register(name, email, password, email, phone, items);
         // Merge guest items with database items
         setItems((prevLocal) => {
           const merged = [...dbCart];
@@ -51,7 +53,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
         });
       } else {
         // Login user
-        const dbCart = await login(username, password, items);
+        const dbCart = await login(email, password, items);
         // Merge guest items with database items
         setItems((prevLocal) => {
           const merged = [...dbCart];
@@ -70,10 +72,12 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
       }
 
       setSuccess(true);
+      toast.success(isSignUp ? "Account created successfully" : "Signed in successfully");
       setTimeout(() => {
         setSuccess(false);
         setName("");
-        setUsername("");
+        setEmail("");
+        setPhone("");
         setPassword("");
         onClose();
       }, 2000);
@@ -88,7 +92,8 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     setIsSignUp(signUpState);
     setError(null);
     setName("");
-    setUsername("");
+    setEmail("");
+    setPhone("");
     setPassword("");
   };
 
@@ -100,17 +105,17 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/95"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-[#111111]/50"
         >
           <motion.div
             initial={{ scale: 0.95, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0, y: 20 }}
             transition={{ type: "tween", ease: "easeOut", duration: 0.4 }}
-            className="relative w-full max-w-4xl bg-[#050505] border border-[#222] rounded-lg overflow-hidden flex flex-col md:flex-row shadow-[0_0_50px_rgba(0,0,0,0.9)]"
+            className="relative w-full max-w-4xl max-h-[90vh] bg-white border border-[#E5E5E5] rounded-lg overflow-hidden flex flex-col md:flex-row shadow-[0_0_50px_rgba(0,0,0,0.9)]"
           >
             {/* Left side Image & Visuals */}
-            <div className="hidden md:block w-5/12 relative overflow-hidden bg-[#111]">
+            <div className="hidden md:block w-5/12 relative overflow-hidden bg-[#F3F4F6]">
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10" />
               <Image
                 src="/images/hero_suit.png"
@@ -120,19 +125,19 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 sizes="(max-width: 768px) 0vw, 40vw"
               />
               <div className="absolute bottom-10 left-8 z-20 pr-8">
-                <span className="text-[#C6A87C] text-[10px] uppercase tracking-[0.3em] mb-2 block">Sartorial Account</span>
-                <h3 className="text-2xl font-serif text-white mb-2 leading-tight">Synchronize Your Collection</h3>
-                <p className="text-zinc-400 text-xs font-light leading-relaxed">
+                <span className="text-zinc-300 text-[10px] uppercase tracking-[0.3em] mb-2 block drop-shadow-md">Sartorial Account</span>
+                <h3 className="text-2xl font-serif text-white mb-2 leading-tight drop-shadow-md">Synchronize Your Collection</h3>
+                <p className="text-zinc-300 text-xs font-light leading-relaxed drop-shadow-md">
                   Log in to track your cart, measurements, and curated suits across all of your devices seamlessly.
                 </p>
               </div>
             </div>
 
             {/* Right side Auth Form */}
-            <div className="w-full md:w-7/12 p-8 sm:p-12 relative flex flex-col justify-center">
+            <div className="w-full md:w-7/12 p-6 sm:p-8 relative flex flex-col justify-center overflow-y-auto no-scrollbar">
               <button
                 onClick={onClose}
-                className="absolute top-6 right-6 text-zinc-500 hover:text-white transition-colors bg-[#111]/50 p-2 rounded-full hover:bg-zinc-800"
+                className="absolute top-6 right-6 text-[#6B7280] hover:text-[#111111] transition-colors bg-[#F3F4F6]/50 p-2 rounded-full hover:bg-zinc-100"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -147,55 +152,55 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                     transition={{ duration: 0.3 }}
                   >
                     {/* Tabs */}
-                    <div className="flex gap-6 border-b border-[#222] mb-8">
+                    <div className="flex gap-6 border-b border-[#E5E5E5] mb-5">
                       <button
                         onClick={() => toggleTab(false)}
                         className={`pb-4 text-sm uppercase tracking-widest font-semibold transition-all relative ${
-                          !isSignUp ? "text-[#C6A87C]" : "text-zinc-500 hover:text-zinc-300"
+                          !isSignUp ? "text-[#111111]" : "text-[#6B7280] hover:text-zinc-300"
                         }`}
                       >
                         Sign In
                         {!isSignUp && (
                           <motion.div
                             layoutId="active-tab-line"
-                            className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#C6A87C]"
+                            className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#111111]"
                           />
                         )}
                       </button>
                       <button
                         onClick={() => toggleTab(true)}
                         className={`pb-4 text-sm uppercase tracking-widest font-semibold transition-all relative ${
-                          isSignUp ? "text-[#C6A87C]" : "text-zinc-500 hover:text-zinc-300"
+                          isSignUp ? "text-[#111111]" : "text-[#6B7280] hover:text-zinc-300"
                         }`}
                       >
                         Create Account
                         {isSignUp && (
                           <motion.div
                             layoutId="active-tab-line"
-                            className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#C6A87C]"
+                            className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#111111]"
                           />
                         )}
                       </button>
                     </div>
 
-                    <h2 className="text-2xl font-serif text-white mb-2">
+                    <h2 className="text-2xl font-serif text-[#111111] mb-2">
                       {isSignUp ? "Join Genial Stoffa" : "Welcome Back"}
                     </h2>
-                    <p className="text-zinc-400 mb-8 text-xs font-light">
+                    <p className="text-[#4B5563] mb-5 text-xs font-light">
                       {isSignUp
                         ? "Register credentials to synchronize your shopping cart on other devices."
                         : "Sign in with your credentials to load your saved selections."}
                     </p>
 
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <form onSubmit={handleSubmit} className="space-y-4">
                       {/* Name (Only for Sign Up) */}
                       {isSignUp && (
                         <div className="relative group">
-                          <label htmlFor="name" className="block text-[10px] font-medium text-zinc-400 uppercase tracking-wider mb-1">
+                          <label htmlFor="name" className="block text-[10px] font-medium text-[#4B5563] uppercase tracking-wider mb-1">
                             Full Name
                           </label>
                           <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-500 group-focus-within:text-[#C6A87C] transition-colors">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#6B7280] group-focus-within:text-[#111111] transition-colors">
                               <User className="w-4 h-4" />
                             </div>
                             <input
@@ -206,12 +211,12 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                               onChange={(e) => setName(e.target.value)}
                               onFocus={() => setFocusedField("name")}
                               onBlur={() => setFocusedField(null)}
-                              className="w-full bg-transparent border-b border-[#222] text-white pl-10 pr-4 py-3 focus:outline-none transition-colors"
+                              className="w-full bg-transparent border-b border-[#E5E5E5] text-[#111111] pl-10 pr-4 py-2 focus:outline-none transition-colors"
                               placeholder="Enter your name"
                               disabled={isLoading}
                             />
                             <motion.div 
-                              className="absolute bottom-0 left-0 h-[1px] bg-[#C6A87C]"
+                              className="absolute bottom-0 left-0 h-[1px] bg-[#111111]"
                               initial={{ width: 0 }}
                               animate={{ width: focusedField === "name" ? "100%" : 0 }}
                               transition={{ duration: 0.3 }}
@@ -220,43 +225,78 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                         </div>
                       )}
 
-                      {/* Username */}
+                      {/* Phone (Only for Sign Up) */}
+                      {isSignUp && (
+                        <div className="relative group">
+                          <label htmlFor="phone" className="block text-[10px] font-medium text-[#4B5563] uppercase tracking-wider mb-1">
+                            Phone Number
+                          </label>
+                          <div className="relative">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#6B7280] group-focus-within:text-[#111111] transition-colors">
+                              <span className="text-xs font-semibold">+91</span>
+                            </div>
+                            <input
+                              type="tel"
+                              id="phone"
+                              required={isSignUp}
+                              value={phone}
+                              onChange={(e) => setPhone(e.target.value)}
+                              onFocus={() => setFocusedField("phone")}
+                              onBlur={() => setFocusedField(null)}
+                              className="w-full bg-transparent border-b border-[#E5E5E5] text-[#111111] pl-10 pr-4 py-2 focus:outline-none transition-colors"
+                              placeholder="Enter mobile number"
+                              disabled={isLoading}
+                            />
+                            <motion.div 
+                              className="absolute bottom-0 left-0 h-[1px] bg-[#111111]"
+                              initial={{ width: 0 }}
+                              animate={{ width: focusedField === "phone" ? "100%" : 0 }}
+                              transition={{ duration: 0.3 }}
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Email (Always shown) */}
                       <div className="relative group">
-                        <label htmlFor="username" className="block text-[10px] font-medium text-zinc-400 uppercase tracking-wider mb-1">
-                          Username
+                        <label htmlFor="email" className="block text-[10px] font-medium text-[#4B5563] uppercase tracking-wider mb-1">
+                          Email Address
                         </label>
                         <div className="relative">
-                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-500 group-focus-within:text-[#C6A87C] transition-colors">
-                            <User className="w-4 h-4" />
+                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#6B7280] group-focus-within:text-[#111111] transition-colors">
+                            <Mail className="w-4 h-4" />
                           </div>
                           <input
-                            type="text"
-                            id="username"
+                            type="email"
+                            id="email"
                             required
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            onFocus={() => setFocusedField("username")}
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            onFocus={() => setFocusedField("email")}
                             onBlur={() => setFocusedField(null)}
-                            className="w-full bg-transparent border-b border-[#222] text-white pl-10 pr-4 py-3 focus:outline-none transition-colors"
-                            placeholder="Enter username"
+                            className="w-full bg-transparent border-b border-[#E5E5E5] text-[#111111] pl-10 pr-4 py-2 focus:outline-none transition-colors"
+                            placeholder="Enter email address"
                             disabled={isLoading}
                           />
                           <motion.div 
-                            className="absolute bottom-0 left-0 h-[1px] bg-[#C6A87C]"
+                            className="absolute bottom-0 left-0 h-[1px] bg-[#111111]"
                             initial={{ width: 0 }}
-                            animate={{ width: focusedField === "username" ? "100%" : 0 }}
+                            animate={{ width: focusedField === "email" ? "100%" : 0 }}
                             transition={{ duration: 0.3 }}
                           />
                         </div>
                       </div>
 
+                      {/* Username */}
+
+
                       {/* Password */}
                       <div className="relative group">
-                        <label htmlFor="password" className="block text-[10px] font-medium text-zinc-400 uppercase tracking-wider mb-1">
+                        <label htmlFor="password" className="block text-[10px] font-medium text-[#4B5563] uppercase tracking-wider mb-1">
                           Password
                         </label>
                         <div className="relative">
-                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-500 group-focus-within:text-[#C6A87C] transition-colors">
+                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#6B7280] group-focus-within:text-[#111111] transition-colors">
                             <Lock className="w-4 h-4" />
                           </div>
                           <input
@@ -267,12 +307,12 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                             onChange={(e) => setPassword(e.target.value)}
                             onFocus={() => setFocusedField("password")}
                             onBlur={() => setFocusedField(null)}
-                            className="w-full bg-transparent border-b border-[#222] text-white pl-10 pr-4 py-3 focus:outline-none transition-colors"
+                            className="w-full bg-transparent border-b border-[#E5E5E5] text-[#111111] pl-10 pr-4 py-2 focus:outline-none transition-colors"
                             placeholder="Enter password"
                             disabled={isLoading}
                           />
                           <motion.div 
-                            className="absolute bottom-0 left-0 h-[1px] bg-[#C6A87C]"
+                            className="absolute bottom-0 left-0 h-[1px] bg-[#111111]"
                             initial={{ width: 0 }}
                             animate={{ width: focusedField === "password" ? "100%" : 0 }}
                             transition={{ duration: 0.3 }}
@@ -297,7 +337,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                         whileTap={{ scale: 0.98 }}
                         type="submit"
                         disabled={isLoading}
-                        className="w-full bg-[#C6A87C] text-black font-semibold py-4 px-6 mt-4 rounded-sm hover:bg-white transition-colors uppercase tracking-widest text-xs flex justify-center items-center disabled:bg-zinc-700 disabled:text-zinc-400"
+                        className="w-full bg-[#111111] text-white font-semibold py-3 px-6 mt-2 rounded-sm hover:bg-[#111111] transition-colors uppercase tracking-widest text-xs flex justify-center items-center disabled:bg-zinc-700 disabled:text-[#4B5563]"
                       >
                         {isLoading ? (
                           <span className="inline-block animate-pulse">Processing...</span>
@@ -322,13 +362,13 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                       animate={{ scale: 1, rotate: 0 }}
                       transition={{ delay: 0.2, type: "spring", stiffness: 200, damping: 15 }}
                     >
-                      <CheckCircle2 className="w-16 h-16 text-[#C6A87C] mb-6 drop-shadow-[0_0_15px_rgba(212,175,55,0.3)]" />
+                      <CheckCircle2 className="w-16 h-16 text-[#111111] mb-6 drop-shadow-[0_0_15px_rgba(212,175,55,0.3)]" />
                     </motion.div>
-                    <h2 className="text-2xl font-serif text-white mb-2">
+                    <h2 className="text-2xl font-serif text-[#111111] mb-2">
                       {isSignUp ? "Registration Successful" : "Welcome Back"}
                     </h2>
-                    <p className="text-zinc-400 text-xs max-w-xs leading-relaxed font-light">
-                      Successfully authenticated as <span className="text-white font-medium">{username}</span>. Your shopping cart is now synchronized.
+                    <p className="text-[#4B5563] text-xs max-w-xs leading-relaxed font-light">
+                      Successfully authenticated. Your shopping cart is now synchronized.
                     </p>
                   </motion.div>
                 )}

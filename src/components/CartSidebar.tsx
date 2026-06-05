@@ -7,10 +7,12 @@ import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import AuthModal from "./AuthModal";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function CartSidebar() {
   const { isCartOpen, setIsCartOpen, items, removeFromCart, cartTotal, updateQuantity } = useCart();
   const { user } = useAuth();
+  const router = useRouter();
   const [expandedItems, setExpandedItems] = useState<{[key: string]: boolean}>({});
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [showCheckoutOptions, setShowCheckoutOptions] = useState(false);
@@ -36,7 +38,7 @@ export default function CartSidebar() {
     
     items.forEach((item, idx) => {
       message += `${idx + 1}. *${item.name}* (Size: ${item.size})\n`;
-      message += `   Qty: ${item.quantity} | Price: $${item.price.toLocaleString()}\n`;
+      message += `   Qty: ${item.quantity}\n`;
       if (item.size === "Custom" && item.customMeasurements) {
         const m = item.customMeasurements;
         message += `   *Measurements (${m.unit}):*\n`;
@@ -61,7 +63,7 @@ export default function CartSidebar() {
       message += `\n`;
     });
     
-    message += `*Subtotal:* $${cartTotal.toLocaleString()}\n\n`;
+
     message += `Please review these details and let me know the next steps for my fittings. Thank you!`;
     
     return `https://wa.me/919122782023?text=${encodeURIComponent(message)}`;
@@ -81,7 +83,7 @@ export default function CartSidebar() {
                 setIsCartOpen(false);
                 setShowCheckoutOptions(false);
               }}
-              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50"
+              className="fixed inset-0 bg-[#111111]/50 backdrop-blur-sm z-50"
             />
 
             {/* Sidebar */}
@@ -90,16 +92,16 @@ export default function CartSidebar() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "tween", ease: "easeInOut", duration: 0.4 }}
-              className="fixed top-0 right-0 h-full w-full max-w-md bg-[#0A0A0A] border-l border-[#222] shadow-2xl z-50 flex flex-col"
+              className="fixed top-0 right-0 h-full w-full max-w-md bg-[#FAFAFA] border-l border-[#E5E5E5] shadow-2xl z-50 flex flex-col"
             >
-              <div className="flex items-center justify-between p-6 border-b border-[#222]">
-                <h2 className="text-xl font-serif text-white tracking-widest uppercase">Your Cart</h2>
+              <div className="flex items-center justify-between p-6 border-b border-[#E5E5E5]">
+                <h2 className="text-xl font-serif text-[#111111] tracking-widest uppercase">Your Cart</h2>
                 <button 
                   onClick={() => {
                     setIsCartOpen(false);
                     setShowCheckoutOptions(false);
                   }}
-                  className="p-2 text-zinc-500 hover:text-white transition-colors"
+                  className="p-2 text-[#6B7280] hover:text-[#111111] transition-colors"
                 >
                   <X className="w-6 h-6" />
                 </button>
@@ -108,10 +110,13 @@ export default function CartSidebar() {
               <div className="flex-1 overflow-y-auto p-6">
                 {items.length === 0 ? (
                   <div className="h-full flex flex-col items-center justify-center text-center">
-                    <p className="text-zinc-500 font-light mb-4">Your collection is currently empty.</p>
+                    <p className="text-[#6B7280] font-light mb-4">Your collection is currently empty.</p>
                     <button 
-                      onClick={() => setIsCartOpen(false)}
-                      className="text-[#C6A87C] uppercase tracking-[0.1em] text-sm hover:text-white transition-colors border-b border-[#C6A87C] pb-1"
+                      onClick={() => {
+                        setIsCartOpen(false);
+                        router.push("/shop");
+                      }}
+                      className="text-[#111111] uppercase tracking-[0.1em] text-sm hover:text-[#111111] transition-colors border-b border-[#111111] pb-1 cursor-pointer"
                     >
                       Continue Shopping
                     </button>
@@ -119,50 +124,64 @@ export default function CartSidebar() {
                 ) : (
                   <div className="space-y-6">
                     {items.map((item) => (
-                      <div key={item.id} className="flex gap-4 bg-[#111] p-4 rounded-sm border border-[#222]">
-                        <div className="relative w-24 h-32 bg-[#1a1a1a] rounded-sm overflow-hidden shrink-0">
-                          <Image src={item.image} alt={item.name} fill className="object-cover" />
+                      <div key={item.id} className="flex gap-4 bg-[#F3F4F6] p-4 rounded-sm border border-[#E5E5E5]">
+                        <div 
+                          className="relative w-24 h-32 bg-[#D1CCC5] rounded-sm overflow-hidden shrink-0 cursor-pointer"
+                          onClick={() => {
+                            setIsCartOpen(false);
+                            router.push(`/shop/${item.productId}`);
+                          }}
+                        >
+                          <Image src={item.image} alt={item.name} fill className="object-cover hover:scale-105 transition-transform duration-500" />
                         </div>
                         <div className="flex flex-col justify-between flex-1">
                           <div>
                             <div className="flex justify-between items-start mb-1">
-                              <h3 className="text-white font-serif text-lg">{item.name}</h3>
+                              <h3 
+                                className="text-[#111111] font-serif text-lg cursor-pointer hover:text-[#4B5563] transition-colors"
+                                onClick={() => {
+                                  setIsCartOpen(false);
+                                  router.push(`/shop/${item.productId}`);
+                                }}
+                              >
+                                {item.name}
+                              </h3>
                               <button 
                                 onClick={() => removeFromCart(item.id)}
-                                className="text-zinc-500 hover:text-white transition-colors p-1"
+                                className="text-[#6B7280] hover:text-[#111111] transition-colors p-1"
                                 aria-label="Remove item"
                               >
                                 <X className="w-5 h-5" />
                               </button>
                             </div>
-                            <p className="text-zinc-500 text-xs tracking-widest uppercase mb-2">Size: {item.size}</p>
+                            <p className="text-[#6B7280] text-xs tracking-widest uppercase mb-2">Size: {item.size}</p>
                             
                             {/* Quantity Selector */}
                             <div className="flex items-center gap-2 mb-3">
-                              <span className="text-zinc-500 text-[10px] tracking-wider uppercase font-semibold">Qty:</span>
-                              <div className="flex items-center bg-[#050505] border border-[#222] rounded-sm overflow-hidden h-7">
+                              <span className="text-[#6B7280] text-[10px] tracking-wider uppercase font-semibold">Qty:</span>
+                              <div className="flex items-center bg-white border border-[#E5E5E5] rounded-sm overflow-hidden h-7">
                                 <button
                                   onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                                  className="w-7 h-full flex items-center justify-center text-zinc-400 hover:text-white hover:bg-[#111] transition-colors cursor-pointer text-xs focus:outline-none select-none active:bg-zinc-900 border-r border-[#222]"
+                                  className="w-7 h-full flex items-center justify-center text-[#4B5563] hover:text-[#111111] hover:bg-[#F3F4F6] transition-colors cursor-pointer text-xs focus:outline-none select-none active:bg-zinc-200 border-r border-[#E5E5E5]"
                                 >
                                   -
                                 </button>
-                                <span className="w-8 text-center bg-transparent text-white font-medium text-[10px] select-none">
+                                <span className="w-8 text-center bg-transparent text-[#111111] font-medium text-[10px] select-none">
                                   {item.quantity}
                                 </span>
                                 <button
                                   onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                  className="w-7 h-full flex items-center justify-center text-zinc-400 hover:text-white hover:bg-[#111] transition-colors cursor-pointer text-xs focus:outline-none select-none active:bg-zinc-900 border-l border-[#222]"
+                                  className="w-7 h-full flex items-center justify-center text-[#4B5563] hover:text-[#111111] hover:bg-[#F3F4F6] transition-colors cursor-pointer text-xs focus:outline-none select-none active:bg-zinc-200 border-l border-[#E5E5E5]"
                                 >
                                   +
                                 </button>
                               </div>
                             </div>
                             {item.size === "Custom" && item.customMeasurements && (
-                              <div className="mt-2 pt-2 border-t border-[#222]">
+                              <div className="mt-2 pt-2 border-t border-[#E5E5E5]">
                                 <button 
                                   onClick={() => toggleExpand(item.id)}
-                                  className="flex items-center gap-1 text-[10px] text-[#C6A87C] uppercase tracking-wider hover:text-white transition-colors cursor-pointer focus:outline-none"
+                                  className="flex items-center gap-1 text-[10px] text-[#111111] uppercase tracking-wider hover:text-[#111111] transition-colors cursor-pointer focus:outline-none"
                                 >
                                   <Ruler className="w-3 h-3" />
                                   <span>{expandedItems[item.id] ? "Hide Sizes" : "View Sizes"}</span>
@@ -170,10 +189,10 @@ export default function CartSidebar() {
                                 </button>
                                 
                                 {expandedItems[item.id] && (
-                                  <div className="mt-2 text-[10px] text-zinc-400 space-y-1 bg-[#0A0A0A] p-2 border border-[#222] rounded-sm font-light">
+                                  <div className="mt-2 text-[10px] text-[#4B5563] space-y-1 bg-[#FAFAFA] p-2 border border-[#E5E5E5] rounded-sm font-light">
                                     {item.customMeasurements.top && (
                                       <div>
-                                        <p className="text-[9px] uppercase tracking-wider text-zinc-500 font-semibold mb-0.5">Top Details</p>
+                                        <p className="text-[9px] uppercase tracking-wider text-[#6B7280] font-semibold mb-0.5">Top Details</p>
                                         <div className="grid grid-cols-2 gap-x-2 gap-y-0.5">
                                           {item.customMeasurements.top.topLength && <p>Top Length: {item.customMeasurements.top.topLength}{item.customMeasurements.unit}</p>}
                                           {item.customMeasurements.top.chest && <p>Chest: {item.customMeasurements.top.chest}{item.customMeasurements.unit}</p>}
@@ -185,8 +204,8 @@ export default function CartSidebar() {
                                       </div>
                                     )}
                                     {item.customMeasurements.bottom && (
-                                      <div className={item.customMeasurements.top ? "mt-2 pt-2 border-t border-[#222]" : ""}>
-                                        <p className="text-[9px] uppercase tracking-wider text-zinc-500 font-semibold mb-0.5">Bottom Details</p>
+                                      <div className={item.customMeasurements.top ? "mt-2 pt-2 border-t border-[#E5E5E5]" : ""}>
+                                        <p className="text-[9px] uppercase tracking-wider text-[#6B7280] font-semibold mb-0.5">Bottom Details</p>
                                         <div className="grid grid-cols-2 gap-x-2 gap-y-0.5">
                                           {item.customMeasurements.bottom.bottomLength && <p>Length: {item.customMeasurements.bottom.bottomLength}{item.customMeasurements.unit}</p>}
                                           {item.customMeasurements.bottom.waist && <p>Waist: {item.customMeasurements.bottom.waist}{item.customMeasurements.unit}</p>}
@@ -196,8 +215,8 @@ export default function CartSidebar() {
                                       </div>
                                     )}
                                     {item.customMeasurements.notes && (
-                                      <div className="mt-1.5 pt-1.5 border-t border-[#222]">
-                                        <p className="italic text-zinc-500 font-light text-[9px] break-words">Notes: {item.customMeasurements.notes}</p>
+                                      <div className="mt-1.5 pt-1.5 border-t border-[#E5E5E5]">
+                                        <p className="italic text-[#6B7280] font-light text-[9px] break-words">Notes: {item.customMeasurements.notes}</p>
                                       </div>
                                     )}
                                   </div>
@@ -205,7 +224,7 @@ export default function CartSidebar() {
                               </div>
                             )}
                           </div>
-                          <p className="text-[#C6A87C] font-medium tracking-wide">${item.price.toLocaleString()}</p>
+
                         </div>
                       </div>
                     ))}
@@ -214,28 +233,27 @@ export default function CartSidebar() {
               </div>
 
               {items.length > 0 && (
-                <div className="p-6 border-t border-[#222] bg-[#050505]">
-                  <div className="flex justify-between text-white font-serif text-xl mb-6">
-                    <span>Subtotal</span>
-                    <span>${cartTotal.toLocaleString()}</span>
+                <div className="p-6 border-t border-[#E5E5E5] bg-white">
+                  <div className="flex justify-between text-[#111111] font-serif text-xl mb-6">
+                    <span>Enquiry List</span>
                   </div>
                   
                   {showCheckoutOptions ? (
                     <div className="space-y-4">
-                      <p className="text-zinc-400 text-xs font-light leading-relaxed mb-2">
-                        To place your bespoke order, connect directly with our master tailors on WhatsApp. We will review your measurements, fabric preferences, and finalize your fitting details.
+                      <p className="text-[#4B5563] text-xs font-light leading-relaxed mb-2">
+                        To enquire about your cart or place a bespoke order, connect directly with our master tailors on WhatsApp. We will review your measurements, fabric preferences, and finalize your fitting details.
                       </p>
                       <a 
                         href={generateWhatsAppLink()} 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="w-full bg-[#25D366] text-white py-4 uppercase tracking-[0.2em] font-semibold text-xs hover:bg-[#20ba5a] transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer rounded-sm"
+                        className="w-full bg-[#25D366] text-[#111111] py-4 uppercase tracking-[0.2em] font-semibold text-xs hover:bg-[#20ba5a] transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer rounded-sm"
                       >
-                        <MessageSquare className="w-4 h-4 fill-current" /> Order on WhatsApp
+                        <MessageSquare className="w-4 h-4 fill-current" /> Enquire on WhatsApp
                       </a>
                       <button 
                         onClick={() => setShowCheckoutOptions(false)} 
-                        className="w-full text-zinc-500 hover:text-white text-xs uppercase tracking-widest py-2 transition-colors cursor-pointer focus:outline-none"
+                        className="w-full text-[#6B7280] hover:text-[#111111] text-xs uppercase tracking-widest py-2 transition-colors cursor-pointer focus:outline-none"
                       >
                         Back to Cart
                       </button>
@@ -243,9 +261,9 @@ export default function CartSidebar() {
                   ) : (
                     <button 
                       onClick={handleCheckoutClick}
-                      className="w-full bg-[#C6A87C] text-black py-4 uppercase tracking-[0.2em] font-semibold text-sm hover:bg-white transition-all duration-300 cursor-pointer"
+                      className="w-full bg-[#111111] text-white py-4 uppercase tracking-[0.2em] font-semibold text-sm hover:bg-[#111111] transition-all duration-300 cursor-pointer"
                     >
-                      Proceed to Checkout
+                      Enquire / Checkout
                     </button>
                   )}
                 </div>

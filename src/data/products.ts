@@ -236,8 +236,8 @@ export const products = [
     deliveryTime: "10 days"
   },
   { 
-    id: "royal-ivory-indo-western", 
-    name: "The Royal Ivory Indo-Western", 
+    id: "navy-blue-double-breasted-suit", 
+    name: "Navy Blue Double Breasted Suit", 
     category: "Designer Suit", 
     price: 1950, 
     image: "/images/AI_14.png",
@@ -256,9 +256,9 @@ export const products = [
     deliveryTime: "25 days"
   },
   { 
-    id: "varanasi-brocade-sherwani", 
-    name: "Varanasi Heritage Brocade Sherwani", 
-    category: "Sherwani", 
+    id: "precious-beadwork-bandhgala", 
+    name: "Precious Beadwork Bandh Gala", 
+    category: "Bandh Gala", 
     price: 3800, 
     image: "/images/AI_15.png",
     images: ["/images/AI_15.png"],
@@ -276,9 +276,9 @@ export const products = [
     deliveryTime: "40 days"
   },
   { 
-    id: "asymmetric-modern-bandhgala", 
-    name: "Modern Asymmetric Bandh Gala", 
-    category: "Bandh Gala", 
+    id: "precision-embroidery-sherwani", 
+    name: "Precision Embroidery Sherwani", 
+    category: "Sherwani", 
     price: 1500, 
     image: "/images/AI_16.png",
     images: ["/images/AI_16.png"],

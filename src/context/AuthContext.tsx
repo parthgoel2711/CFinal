@@ -16,7 +16,7 @@ interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   login: (username: string, password: string, currentCart: CartItem[]) => Promise<CartItem[]>;
-  register: (name: string, username: string, password: string, currentCart: CartItem[]) => Promise<CartItem[]>;
+  register: (name: string, username: string, password: string, email: string, phone: string, currentCart: CartItem[]) => Promise<CartItem[]>;
   logout: () => void;
   updateProfile: (profileData: { firstName: string; lastName: string; email: string; phone: string }) => Promise<void>;
 }
@@ -65,11 +65,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return data.cart || [];
   };
 
-  const register = async (name: string, username: string, password: string, currentCart: CartItem[]): Promise<CartItem[]> => {
+  const register = async (name: string, username: string, password: string, email: string, phone: string, currentCart: CartItem[]): Promise<CartItem[]> => {
     const response = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password, name, cart: currentCart }),
+      body: JSON.stringify({ username, password, name, email, phone, cart: currentCart }),
     });
 
     const data = await response.json();

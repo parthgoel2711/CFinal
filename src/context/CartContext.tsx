@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { useAuth } from "@/context/AuthContext";
+import toast from "react-hot-toast";
 
 export interface CustomMeasurements {
   unit: "in" | "cm";
@@ -124,6 +125,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
       return [...prev, newItem];
     });
+    toast.success("Added to cart");
     setIsCartOpen(true);
   };
 

@@ -53,11 +53,18 @@ export interface Consultation {
   createdAt: string;
 }
 
+export interface Subscriber {
+  email: string;
+  subscribedAt: string;
+}
+
 export interface DatabaseSchema {
+  adminPassword?: string;
   users: {
     [username: string]: User;
   };
   consultations?: Consultation[];
+  subscribers?: Subscriber[];
 }
 
 const DB_PATH = path.join(process.cwd(), "src", "data", "db.json");
@@ -76,7 +83,7 @@ export function readDB(): DatabaseSchema {
   try {
     if (!fs.existsSync(DB_PATH)) {
       ensureDirectoryExistence(DB_PATH);
-      const initialData: DatabaseSchema = { users: {}, consultations: [] };
+      const initialData: DatabaseSchema = { users: {}, consultations: [], subscribers: [] };
       fs.writeFileSync(DB_PATH, JSON.stringify(initialData, null, 2), "utf-8");
       return initialData;
     }
@@ -85,10 +92,13 @@ export function readDB(): DatabaseSchema {
     if (!data.consultations) {
       data.consultations = [];
     }
+    if (!data.subscribers) {
+      data.subscribers = [];
+    }
     return data;
   } catch (error) {
     console.error("Error reading database file", error);
-    return { users: {}, consultations: [] };
+    return { users: {}, consultations: [], subscribers: [] };
   }
 }
 

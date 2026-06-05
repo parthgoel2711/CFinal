@@ -13,12 +13,16 @@ export async function POST(request: Request) {
     }
 
     const db = readDB();
-    const normalizedUsername = username.trim().toLowerCase();
-    const user = db.users[normalizedUsername];
+    const normalizedInput = username.trim().toLowerCase();
+    
+    // Find user by matching the normalized input against either email or the username key
+    const user = Object.values(db.users).find((u: any) => 
+      u.email?.toLowerCase() === normalizedInput || u.username?.toLowerCase() === normalizedInput
+    );
 
     if (!user || user.password !== password) {
       return NextResponse.json(
-        { error: "Invalid username or password" },
+        { error: "Invalid email or password" },
         { status: 401 }
       );
     }

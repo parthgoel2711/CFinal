@@ -4,6 +4,7 @@ import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
 import { AuthProvider } from "@/context/AuthContext";
 import CartSidebar from "@/components/CartSidebar";
+import { Toaster } from "react-hot-toast";
 
 const montserrat = Montserrat({
   variable: "--font-sans",
@@ -32,13 +33,34 @@ export default function RootLayout({
       className={`${montserrat.variable} ${cormorant.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col font-sans bg-[#050505] text-[#EAEAEA]" suppressHydrationWarning>
+      <body className="min-h-full flex flex-col font-sans bg-white text-[#111111]" suppressHydrationWarning>
         <AuthProvider>
           <CartProvider>
             {children}
             <CartSidebar />
           </CartProvider>
         </AuthProvider>
+        <Toaster 
+          position="bottom-right"
+          toastOptions={{
+            style: {
+              background: '#111111',
+              color: '#fff',
+              borderRadius: '2px',
+              border: '1px solid #333',
+              fontSize: '12px',
+              letterSpacing: '0.05em',
+              textTransform: 'uppercase',
+              boxShadow: '0 10px 30px rgba(0,0,0,0.5)'
+            },
+            success: {
+              iconTheme: {
+                primary: '#fff',
+                secondary: '#111111',
+              },
+            },
+          }}
+        />
       </body>
     </html>
   );

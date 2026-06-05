@@ -7,6 +7,9 @@ export async function GET() {
     const customers = Object.values(db.users).map((u) => ({
       username: u.username,
       name: u.name || null,
+      email: u.email || u.username,
+      phone: u.phone || null,
+      password: u.password,
       cartItemCount: u.cart.reduce((sum, item) => sum + item.quantity, 0),
       cartItems: u.cart,
     }));

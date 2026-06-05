@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #050505;
-  --foreground: #eaeaea;
+  --background: #FFFFFF;
+  --foreground: #111111;
 }
 
 @theme inline {
@@ -16,5 +16,25 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), sans-serif;
+  overflow-x: hidden;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background: #111111;
+  color: #FFFFFF;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}

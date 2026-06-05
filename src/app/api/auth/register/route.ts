@@ -3,20 +3,20 @@ import { readDB, writeDB } from "@/lib/db";
 
 export async function POST(request: Request) {
   try {
-    const { username, password, name, cart } = await request.json();
+    const { username, password, name, phone, email, cart } = await request.json();
 
-    if (!username || !password || !name) {
+    if (!username || !password || !name || !phone || !email) {
       return NextResponse.json(
-        { error: "Name, username, and password are required" },
+        { error: "Name, username, email, phone, and password are required" },
         { status: 400 }
       );
     }
 
-    const normalizedUsername = username.trim().toLowerCase();
-    
+    const normalizedUsername = email.trim().toLowerCase(); // We use email as the primary key now
+
     if (normalizedUsername.length < 3) {
       return NextResponse.json(
-        { error: "Username must be at least 3 characters long" },
+        { error: "Email must be valid" },
         { status: 400 }
       );
     }
@@ -30,9 +30,19 @@ export async function POST(request: Request) {
 
     const db = readDB();
 
+    // Deny if a user with this email already exists
     if (db.users[normalizedUsername]) {
       return NextResponse.json(
-        { error: "Username is already taken" },
+        { error: "An account with this email is already registered." },
+        { status: 409 }
+      );
+    }
+
+    // Also check if any other user has this exact email (just in case the key isn't the email for old accounts)
+    const emailExists = Object.values(db.users).some(u => u.email?.toLowerCase() === normalizedUsername);
+    if (emailExists) {
+      return NextResponse.json(
+        { error: "An account with this email is already registered." },
         { status: 409 }
       );
     }
@@ -41,6 +51,8 @@ export async function POST(request: Request) {
       username: username.trim(),
       password,
       name: name.trim(),
+      phone: phone.trim(),
+      email: email.trim(),
       cart: cart || [],
     };
 
@@ -57,8 +69,8 @@ export async function POST(request: Request) {
       name: name.trim(),
       firstName: "",
       lastName: "",
-      email: "",
-      phone: "",
+      email: email.trim(),
+      phone: phone.trim(),
       cart: cart || [],
     }, { status: 201 });
   } catch (error) {

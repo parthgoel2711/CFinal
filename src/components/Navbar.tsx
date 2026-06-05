@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShoppingBag, User, LogOut, ChevronDown, Settings } from "lucide-react";
+import { ShoppingBag, User, LogOut, ChevronDown, Settings, Menu, X } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import BookingModal from "./BookingModal";
@@ -15,10 +16,20 @@ export default function Navbar() {
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { items, setIsCartOpen } = useCart();
   const { user, logout } = useAuth();
 
   const cartItemCount = items.reduce((total, item) => total + item.quantity, 0);
+
+  useEffect(() => {
+    if (!user) {
+      const timer = setTimeout(() => {
+        setIsAuthOpen(true);
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [user]);
 
   return (
     <>
@@ -26,20 +37,29 @@ export default function Navbar() {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="fixed w-full z-40 bg-[#050505]/90 backdrop-blur-md border-b border-[#222]"
+        className="fixed w-full z-40 bg-white/90 backdrop-blur-md border-b border-[#E5E5E5]"
       >
-        <div className="max-w-[1600px] mx-auto px-6 h-24 flex items-center justify-between">
+        <div className="max-w-[1600px] mx-auto px-6 h-28 flex items-center justify-between">
           <div className="flex items-center gap-10">
-            <Link href="/">
-              <div className="text-2xl font-serif tracking-widest text-white uppercase hover:text-[#C6A87C] transition-colors">
-                GENIAL STOFFA
+            <Link href="/" aria-label="Genial Stoffa Home" className="flex items-center gap-5 group">
+              <div className="relative h-24 w-24 group-hover:opacity-80 transition-opacity duration-300">
+                <Image
+                  src="/logo-21.png"
+                  alt="Genial Stoffa Logo"
+                  fill
+                  className="object-contain object-left"
+                  priority
+                />
               </div>
+              <span className="text-xl md:text-2xl font-serif text-[#111111] tracking-widest uppercase font-medium">
+                Genial Stoffa
+              </span>
             </Link>
-            <div className="hidden md:flex items-center gap-6">
-              <Link href="/shop" className="text-sm font-medium uppercase tracking-[0.1em] text-zinc-400 hover:text-white transition-colors">
+            <div className="hidden md:flex items-center gap-8">
+              <Link href="/shop" className="text-sm font-medium uppercase tracking-[0.1em] text-[#4B5563] hover:text-[#111111] transition-colors relative after:absolute after:-bottom-1 after:left-0 after:h-[1px] after:w-0 after:bg-[#111111] hover:after:w-full after:transition-all after:duration-300">
                 Collection
               </Link>
-              <Link href="/#contact" className="text-sm font-medium uppercase tracking-[0.1em] text-zinc-400 hover:text-white transition-colors">
+              <Link href="/#contact" className="text-sm font-medium uppercase tracking-[0.1em] text-[#4B5563] hover:text-[#111111] transition-colors relative after:absolute after:-bottom-1 after:left-0 after:h-[1px] after:w-0 after:bg-[#111111] hover:after:w-full after:transition-all after:duration-300">
                 Contact Us
               </Link>
             </div>
@@ -50,7 +70,7 @@ export default function Navbar() {
               <div className="relative">
                 <button
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="flex items-center gap-2 text-zinc-400 hover:text-[#C6A87C] transition-colors p-2 text-sm uppercase tracking-wider font-medium cursor-pointer"
+                  className="flex items-center gap-2 text-[#4B5563] hover:text-[#111111] transition-colors p-2 text-sm uppercase tracking-wider font-medium cursor-pointer relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-0 after:bg-[#111111] hover:after:w-full after:transition-all after:duration-300"
                 >
                   <User className="w-5 h-5" />
                   <span className="hidden sm:inline">{user.name || user.username}</span>
@@ -64,9 +84,9 @@ export default function Navbar() {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 10 }}
-                        className="absolute right-0 mt-2 w-48 bg-[#0A0A0A] border border-[#222] rounded-sm shadow-xl z-20 py-2"
+                        className="absolute right-0 mt-2 w-48 bg-[#FAFAFA] border border-[#E5E5E5] rounded-sm shadow-xl z-20 py-2"
                       >
-                        <div className="px-4 py-2 border-b border-[#222] text-[10px] text-zinc-500 uppercase tracking-wider">
+                        <div className="px-4 py-2 border-b border-[#E5E5E5] text-[10px] text-[#4B5563] uppercase tracking-wider">
                           Sartorial Session
                         </div>
                         <button
@@ -74,7 +94,7 @@ export default function Navbar() {
                             setIsProfileOpen(true);
                             setIsUserMenuOpen(false);
                           }}
-                          className="w-full text-left px-4 py-3 text-sm text-zinc-400 hover:text-[#C6A87C] hover:bg-[#111] transition-all flex items-center gap-3 cursor-pointer"
+                          className="w-full text-left px-4 py-3 text-sm text-[#4B5563] hover:text-[#111111] hover:bg-[#F3F4F6] transition-all flex items-center gap-3 cursor-pointer"
                         >
                           <Settings className="w-4 h-4" /> Edit Profile
                         </button>
@@ -83,7 +103,7 @@ export default function Navbar() {
                             logout();
                             setIsUserMenuOpen(false);
                           }}
-                          className="w-full text-left px-4 py-3 text-sm text-zinc-400 hover:text-red-400 hover:bg-[#111] transition-all flex items-center gap-3 cursor-pointer border-t border-[#222]/50"
+                          className="w-full text-left px-4 py-3 text-sm text-[#4B5563] hover:text-red-500 hover:bg-[#F3F4F6] transition-all flex items-center gap-3 cursor-pointer border-t border-[#E5E5E5]"
                         >
                           <LogOut className="w-4 h-4" /> Log Out
                         </button>
@@ -95,7 +115,7 @@ export default function Navbar() {
             ) : (
               <button
                 onClick={() => setIsAuthOpen(true)}
-                className="text-zinc-400 hover:text-[#C6A87C] transition-colors p-2 cursor-pointer"
+                className="text-[#4B5563] hover:text-[#111111] transition-colors p-2 cursor-pointer relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-0 after:bg-[#111111] hover:after:w-full after:transition-all after:duration-300"
                 aria-label="Sign In"
               >
                 <User className="w-5 h-5" />
@@ -105,11 +125,11 @@ export default function Navbar() {
             {/* Shopping Cart Trigger */}
             <button
               onClick={() => setIsCartOpen(true)}
-              className="relative text-zinc-400 hover:text-[#C6A87C] transition-colors p-2 cursor-pointer"
+              className="relative text-[#4B5563] hover:text-[#111111] transition-colors p-2 cursor-pointer after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-0 after:bg-[#111111] hover:after:w-full after:transition-all after:duration-300"
             >
               <ShoppingBag className="w-6 h-6" />
               {cartItemCount > 0 && (
-                <span className="absolute top-0 right-0 bg-[#C6A87C] text-black text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                <span className="absolute top-0 right-0 bg-[#111111] text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full">
                   {cartItemCount}
                 </span>
               )}
@@ -117,12 +137,58 @@ export default function Navbar() {
             
             <button
               onClick={() => setIsModalOpen(true)}
-              className="hidden md:inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.2em] hover:text-[#C6A87C] transition-colors text-white cursor-pointer"
+              className="hidden md:inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.2em] hover:text-[#111111] transition-colors text-[#111111] cursor-pointer relative after:absolute after:-bottom-1 after:left-0 after:h-[1px] after:w-0 after:bg-[#111111] hover:after:w-full after:transition-all after:duration-300"
             >
               Consultation
             </button>
+
+            {/* Mobile Menu Toggle */}
+            <button
+              className="md:hidden text-[#4B5563] hover:text-[#111111] transition-colors p-2 cursor-pointer"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile Menu Drawer */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="md:hidden overflow-hidden bg-white border-b border-[#E5E5E5] px-6"
+            >
+              <div className="flex flex-col py-6 space-y-6">
+                <Link
+                  href="/shop"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-sm font-medium uppercase tracking-[0.1em] text-[#111111]"
+                >
+                  Collection
+                </Link>
+                <Link
+                  href="/#contact"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-sm font-medium uppercase tracking-[0.1em] text-[#111111]"
+                >
+                  Contact Us
+                </Link>
+                <button
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    setIsModalOpen(true);
+                  }}
+                  className="text-left text-sm font-medium uppercase tracking-[0.1em] text-[#111111]"
+                >
+                  Book Consultation
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.nav>
       
       <BookingModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
