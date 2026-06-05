@@ -157,6 +157,7 @@ export default function Shop() {
                           <ShoppingBag className="w-3.5 h-3.5" /> Add to Cart
                         </button>
                   </div>
+                </div>
                 
                 {/* Product Info */}
                 <div className="flex justify-between items-start px-1">
