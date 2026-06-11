@@ -51,7 +51,7 @@ export default function Navbar() {
                   priority
                 />
               </div>
-              <span className="hidden sm:block text-base sm:text-xl md:text-[1.35rem] font-serif text-[#111111] tracking-[0.2em] uppercase font-medium">
+              <span className="text-base sm:text-xl md:text-[1.35rem] font-serif text-[#111111] tracking-[0.1em] sm:tracking-[0.2em] uppercase font-medium line-clamp-1 sm:line-clamp-none whitespace-nowrap">
                 Genial Stoffa
               </span>
             </Link>
