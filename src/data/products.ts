@@ -113,7 +113,7 @@ export const products = [
   },
   { 
     id: "sequin-lapel-blazer", 
-    name: "Midnight Sequin Lapel Blazer", 
+    name: "The Genial Signature Tuxedo", 
     category: "Designer Suit", 
     price: 1300, 
     image: "/images/AI_11.png",
@@ -177,7 +177,7 @@ export const products = [
   // --- SLIDE 4: TIMELESS BESPOKE FORMALS ---
   { 
     id: "genial-signature-tuxedo", 
-    name: "The Genial Signature Tuxedo", 
+    name: "Signature Suit", 
     category: "Basic Suit", 
     price: 1500, 
     image: "/images/AI_12.png",
@@ -217,7 +217,7 @@ export const products = [
   },
   { 
     id: "mustard-velvet-waistcoat-set", 
-    name: "Mustard Velvet Waistcoat Set", 
+    name: "Mustard Royal Velvet Bandh Gala", 
     category: "Bandh Gala", 
     price: 1100, 
     image: "/images/AI_8.png",

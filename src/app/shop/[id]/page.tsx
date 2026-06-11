@@ -169,7 +169,7 @@ export default function ProductDetail() {
               className={`flex-1 pb-3 text-sm uppercase tracking-wider font-semibold border-b-2 transition-all cursor-pointer ${
                 sizingMode === "standard"
                   ? "border-[#111111] text-[#111111]"
-                  : "border-transparent text-[#6B7280] hover:text-zinc-300"
+                  : "border-transparent text-[#6B7280] hover:text-[#111111]"
               }`}
             >
               Standard Size
@@ -179,7 +179,7 @@ export default function ProductDetail() {
               className={`flex-1 pb-3 text-sm uppercase tracking-wider font-semibold border-b-2 transition-all cursor-pointer ${
                 sizingMode === "custom"
                   ? "border-[#111111] text-[#111111]"
-                  : "border-transparent text-[#6B7280] hover:text-zinc-300"
+                  : "border-transparent text-[#6B7280] hover:text-[#111111]"
               }`}
             >
               Custom Sizing
@@ -310,7 +310,7 @@ export default function ProductDetail() {
                     {customMeasurements.notes && (
                       <div className="border-t border-[#E5E5E5]/80 pt-3 text-[11px] bg-white/40 p-3.5 border border-[#E5E5E5]/60 rounded-sm">
                         <span className="text-[#6B7280] block mb-1 uppercase tracking-[0.2em] text-[8px] font-semibold">Special Fit Instructions</span>
-                        <p className="text-zinc-300 italic font-light leading-relaxed">{customMeasurements.notes}</p>
+                        <p className="text-[#4B5563] italic font-light leading-relaxed">{customMeasurements.notes}</p>
                       </div>
                     )}
                   </div>
@@ -431,7 +431,7 @@ export default function ProductDetail() {
 
           {/* Details */}
           <div className="border-t border-[#E5E5E5] pt-8 space-y-6 text-sm">
-            <p className="text-zinc-300 font-light leading-relaxed mb-8">
+            <p className="text-[#4B5563] font-light leading-relaxed mb-8">
               <strong className="text-[#111111]">Description:</strong> {product.description}
             </p>
 
