@@ -45,7 +45,7 @@ export default function Shop() {
     <div className="min-h-screen bg-white text-zinc-100 font-sans selection:bg-[#111111] selection:text-white">
       <Navbar />
 
-      <main className="pt-40 pb-24 px-6 max-w-[1600px] mx-auto min-h-screen">
+      <main className="pt-24 md:pt-28 pb-24 px-6 max-w-[1600px] mx-auto min-h-screen">
         <div className="text-center mb-16">
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
@@ -86,7 +86,7 @@ export default function Shop() {
         </div>
 
         {/* Product Grid */}
-        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-14 justify-items-center">
+        <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 lg:gap-8 justify-items-center">
           <AnimatePresence mode="popLayout">
             {filteredCollection.map((product) => (
               <motion.div
@@ -96,7 +96,7 @@ export default function Shop() {
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.5 }}
                 key={product.id}
-                className="group flex flex-col w-full max-w-[480px] mx-auto"
+                className="group flex flex-col w-full max-w-[340px] mx-auto"
                 onMouseEnter={() => setHoveredProduct(product.id)}
                 onMouseLeave={() => setHoveredProduct(null)}
               >
@@ -124,12 +124,12 @@ export default function Shop() {
 
                   {/* Quick Add Overlay */}
                   <div 
-                    className={`absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/95 via-black/80 to-transparent pointer-events-auto transition-all duration-300 ${
+                    className={`absolute bottom-0 left-0 w-full p-4 md:p-5 bg-gradient-to-t from-black/95 via-black/80 to-transparent pointer-events-auto transition-all duration-300 ${
                       hoveredProduct === product.id ? 'opacity-100 translate-y-0' : 'opacity-100 md:opacity-0 translate-y-0 md:translate-y-4'
                     }`}
                   >
-                    <p className="text-white text-[9px] tracking-[0.35em] uppercase mb-3 font-medium drop-shadow-md">Select Size</p>
-                    <div className="flex flex-wrap gap-2 mb-5">
+                    <p className="text-white text-[8px] tracking-[0.3em] uppercase mb-2 font-medium drop-shadow-md">Select Size</p>
+                    <div className="flex flex-wrap gap-1.5 mb-4">
                           {sizes.map((s) => (
                             <button
                               key={s}
@@ -137,7 +137,7 @@ export default function Shop() {
                                 e.stopPropagation();
                                 setSelectedSize(prev => ({ ...prev, [product.id]: s }));
                               }}
-                              className={`w-10 h-10 text-[10px] font-semibold border transition-all duration-300 flex items-center justify-center uppercase tracking-wider ${
+                              className={`w-8 h-8 text-[9px] font-semibold border transition-all duration-300 flex items-center justify-center uppercase tracking-wider ${
                                 selectedSize[product.id] === s
                                   ? "border-white bg-white text-[#111111]"
                                   : "border-zinc-400 text-white hover:border-white hover:text-white bg-black/40 backdrop-blur-sm"
@@ -152,9 +152,9 @@ export default function Shop() {
                             e.preventDefault();
                             handleAddToCart(product);
                           }}
-                          className="w-full bg-[#111111] text-white py-3.5 uppercase tracking-[0.2em] font-semibold text-[11px] hover:bg-[#111111] transition-all duration-300 flex justify-center items-center gap-3 cursor-pointer"
+                          className="w-full bg-[#111111] text-white py-2.5 uppercase tracking-[0.2em] font-semibold text-[10px] hover:bg-[#111111] transition-all duration-300 flex justify-center items-center gap-2 cursor-pointer"
                         >
-                          <ShoppingBag className="w-3.5 h-3.5" /> Add to Cart
+                          <ShoppingBag className="w-3 h-3" /> Add to Cart
                         </button>
                   </div>
                 </div>
@@ -164,7 +164,7 @@ export default function Shop() {
                   <div>
                     <span className="text-[#111111] text-[9px] uppercase tracking-[0.3em] mb-2 block font-medium">{product.category}</span>
                     <Link href={`/shop/${product.id}`}>
-                      <h3 className="text-lg md:text-xl font-serif text-[#111111] hover:text-[#111111] transition-colors duration-300 leading-snug">{product.name}</h3>
+                      <h3 className="text-sm md:text-base font-serif text-[#111111] hover:text-[#111111] transition-colors duration-300 leading-snug">{product.name}</h3>
                     </Link>
                   </div>
                   <div className="md:hidden">

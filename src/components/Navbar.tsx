@@ -22,12 +22,61 @@ export default function Navbar() {
 
   const cartItemCount = items.reduce((total, item) => total + item.quantity, 0);
 
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isHomePage, setIsHomePage] = useState(false);
+
   useEffect(() => {
-    if (!user) {
-      const timer = setTimeout(() => {
-        setIsAuthOpen(true);
-      }, 1500);
-      return () => clearTimeout(timer);
+    if (typeof window !== "undefined") {
+      setIsHomePage(window.location.pathname === "/");
+      const handleScroll = () => {
+        setIsScrolled(window.scrollY > window.innerHeight);
+      };
+      window.addEventListener("scroll", handleScroll);
+      handleScroll();
+      return () => window.removeEventListener("scroll", handleScroll);
+    }
+  }, []);
+
+  const isTransparent = isHomePage && !isScrolled && !isMobileMenuOpen;
+
+  const textColor = isTransparent 
+    ? "text-white/90 hover:text-white" 
+    : "text-[#4B5563] hover:text-[#111111]";
+
+  const textHeadingColor = isTransparent 
+    ? "text-white" 
+    : "text-[#111111]";
+
+  const iconColor = isTransparent 
+    ? "text-white hover:text-white/80" 
+    : "text-[#4B5563] hover:text-[#111111]";
+
+  const activeUnderline = isTransparent 
+    ? "after:bg-white" 
+    : "after:bg-[#111111]";
+
+  useEffect(() => {
+    if (!user && typeof window !== "undefined") {
+      const path = window.location.pathname;
+      if (path === "/") {
+        const hasPoppedHome = localStorage.getItem("hasAutoPoppedUpHome");
+        if (!hasPoppedHome) {
+          const timer = setTimeout(() => {
+            setIsAuthOpen(true);
+            localStorage.setItem("hasAutoPoppedUpHome", "true");
+          }, 1500);
+          return () => clearTimeout(timer);
+        }
+      } else if (path === "/shop") {
+        const hasPoppedShop = localStorage.getItem("hasAutoPoppedUpShop");
+        if (!hasPoppedShop) {
+          const timer = setTimeout(() => {
+            setIsAuthOpen(true);
+            localStorage.setItem("hasAutoPoppedUpShop", "true");
+          }, 1500);
+          return () => clearTimeout(timer);
+        }
+      }
     }
   }, [user]);
 
@@ -37,12 +86,16 @@ export default function Navbar() {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="fixed w-full z-40 bg-white/70 backdrop-blur-xl border-b border-[#111111]/5 transition-all duration-500"
+        className={`fixed w-full z-40 transition-all duration-500 ${
+          isTransparent 
+            ? "bg-transparent border-transparent" 
+            : "bg-white/70 backdrop-blur-xl border-b border-[#111111]/5"
+        }`}
       >
-        <div className="max-w-[1600px] mx-auto px-4 md:px-8 h-20 md:h-24 flex items-center justify-between">
-          <div className="flex items-center gap-3 md:gap-8">
-            <Link href="/" aria-label="Genial Stoffa Home" className="flex items-center gap-2 md:gap-4 group">
-              <div className="relative h-20 w-20 md:h-24 md:w-24 group-hover:opacity-80 transition-opacity duration-300 flex-shrink-0">
+        <div className="max-w-[1600px] mx-auto px-4 md:px-8 h-12 md:h-14 flex items-center justify-between">
+          <div className="flex items-center gap-3 md:gap-6">
+            <Link href="/" aria-label="Genial Stoffa Home" className="flex items-center gap-2 md:gap-3 group">
+              <div className="relative h-16 w-16 md:h-20 md:w-20 group-hover:opacity-80 transition-opacity duration-300 flex-shrink-0">
                 <Image
                   src="/logo-21.png"
                   alt="Genial Stoffa Logo"
@@ -51,15 +104,15 @@ export default function Navbar() {
                   priority
                 />
               </div>
-              <span className="text-base sm:text-xl md:text-[1.35rem] font-serif text-[#111111] tracking-[0.1em] sm:tracking-[0.2em] uppercase font-medium line-clamp-1 sm:line-clamp-none whitespace-nowrap">
+              <span className={`text-xs sm:text-sm md:text-base font-serif tracking-[0.1em] sm:tracking-[0.2em] uppercase font-medium line-clamp-1 sm:line-clamp-none whitespace-nowrap transition-colors duration-500 ${textHeadingColor}`}>
                 Genial Stoffa
               </span>
             </Link>
             <div className="hidden md:flex items-center gap-10 ml-4">
-              <Link href="/shop" className="text-xs font-medium uppercase tracking-[0.15em] text-[#4B5563] hover:text-[#111111] transition-colors relative after:absolute after:-bottom-1.5 after:left-0 after:h-[1px] after:w-0 after:bg-[#111111] hover:after:w-full after:transition-all after:duration-500 ease-out">
+              <Link href="/shop" className={`text-xs font-medium uppercase tracking-[0.15em] transition-colors duration-500 relative after:absolute after:-bottom-1.5 after:left-0 after:h-[1px] after:w-0 hover:after:w-full after:transition-all after:duration-500 ease-out ${textColor} ${activeUnderline}`}>
                 Collection
               </Link>
-              <Link href="/#contact" className="text-xs font-medium uppercase tracking-[0.15em] text-[#4B5563] hover:text-[#111111] transition-colors relative after:absolute after:-bottom-1.5 after:left-0 after:h-[1px] after:w-0 after:bg-[#111111] hover:after:w-full after:transition-all after:duration-500 ease-out">
+              <Link href="/#contact" className={`text-xs font-medium uppercase tracking-[0.15em] transition-colors duration-500 relative after:absolute after:-bottom-1.5 after:left-0 after:h-[1px] after:w-0 hover:after:w-full after:transition-all after:duration-500 ease-out ${textColor} ${activeUnderline}`}>
                 Contact Us
               </Link>
             </div>
@@ -70,7 +123,7 @@ export default function Navbar() {
               <div className="relative">
                 <button
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="flex items-center gap-2 text-[#4B5563] hover:text-[#111111] transition-colors p-2 text-xs uppercase tracking-[0.15em] font-medium cursor-pointer relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-0 after:bg-[#111111] hover:after:w-full after:transition-all after:duration-500 ease-out"
+                  className={`flex items-center gap-2 transition-colors duration-500 p-2 text-xs uppercase tracking-[0.15em] font-medium cursor-pointer relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-0 hover:after:w-full after:transition-all after:duration-500 ease-out ${textColor} ${activeUnderline}`}
                 >
                   <User className="w-5 h-5" />
                   <span className="hidden sm:inline">{user.name || user.username}</span>
@@ -115,7 +168,7 @@ export default function Navbar() {
             ) : (
               <button
                 onClick={() => setIsAuthOpen(true)}
-                className="text-[#4B5563] hover:text-[#111111] transition-colors p-2 cursor-pointer relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-0 after:bg-[#111111] hover:after:w-full after:transition-all after:duration-300"
+                className={`transition-colors duration-500 p-2 cursor-pointer relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-0 hover:after:w-full after:transition-all after:duration-300 ${iconColor} ${activeUnderline}`}
                 aria-label="Sign In"
               >
                 <User className="w-5 h-5" />
@@ -125,7 +178,7 @@ export default function Navbar() {
             {/* Shopping Cart Trigger */}
             <button
               onClick={() => setIsCartOpen(true)}
-              className="relative text-[#4B5563] hover:text-[#111111] transition-colors p-2 cursor-pointer after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-0 after:bg-[#111111] hover:after:w-full after:transition-all after:duration-500 ease-out"
+              className={`relative transition-colors duration-500 p-2 cursor-pointer after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-0 hover:after:w-full after:transition-all after:duration-500 ease-out ${iconColor} ${activeUnderline}`}
             >
               <ShoppingBag className="w-5 h-5" />
               {cartItemCount > 0 && (
@@ -137,14 +190,14 @@ export default function Navbar() {
             
             <button
               onClick={() => setIsModalOpen(true)}
-              className="hidden md:inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.2em] hover:text-black/70 transition-colors text-[#111111] cursor-pointer relative after:absolute after:-bottom-1.5 after:left-0 after:h-[1px] after:w-0 after:bg-[#111111] hover:after:w-full after:transition-all after:duration-500 ease-out"
+              className={`hidden md:inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.2em] transition-colors duration-500 cursor-pointer relative after:absolute after:-bottom-1.5 after:left-0 after:h-[1px] after:w-0 hover:after:w-full after:transition-all after:duration-500 ease-out ${textHeadingColor} ${activeUnderline}`}
             >
               Consultation
             </button>
 
             {/* Mobile Menu Toggle */}
             <button
-              className="md:hidden text-[#4B5563] hover:text-[#111111] transition-colors p-2 cursor-pointer"
+              className={`md:hidden transition-colors duration-500 p-2 cursor-pointer ${iconColor}`}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
               {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}

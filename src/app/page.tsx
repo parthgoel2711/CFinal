@@ -70,7 +70,7 @@ export default function Home() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative pt-40 pb-32 md:pt-56 md:pb-48 px-6 overflow-hidden min-h-screen flex items-center">
+      <section className="relative pt-24 pb-32 md:pt-36 md:pb-48 px-6 overflow-hidden min-h-screen flex items-center">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-b from-[#050505]/40 via-[#050505]/60 to-[#050505] z-10" />
           <motion.div
@@ -223,7 +223,7 @@ export default function Home() {
               {chunkedProducts.map((chunk, chunkIdx) => (
                 <div key={chunkIdx} className="min-w-full flex flex-col md:flex-row gap-5 lg:gap-7">
                   {chunk.map((item) => (
-                    <div key={item.id} className="relative flex-1 group cursor-pointer max-w-[400px] mx-auto w-full">
+                    <div key={item.id} className="relative flex-1 group cursor-pointer max-w-[320px] mx-auto w-full">
                       <Link href={`/shop/${item.id}`} className="block">
                         {/* Image Container — elegant portrait ratio */}
                         <div className="relative aspect-[3/4] w-full overflow-hidden bg-[#FAFAFA]">
@@ -245,11 +245,11 @@ export default function Home() {
                           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 group-hover:w-full h-[1px] bg-[#111111]/40 transition-all duration-[1.5s] ease-[0.16,1,0.3,1] pointer-events-none" />
 
                           {/* Product Info Overlay */}
-                          <div className="absolute bottom-0 left-0 right-0 p-8 md:p-10 z-20 pointer-events-none flex flex-col justify-end h-full">
-                            <span className="text-zinc-400 text-[10px] uppercase tracking-[0.4em] mb-4 block font-medium">
+                          <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6 z-20 pointer-events-none flex flex-col justify-end h-full">
+                            <span className="text-zinc-400 text-[9px] uppercase tracking-[0.4em] mb-2 block font-medium">
                               {item.category}
                             </span>
-                            <h3 className="text-2xl md:text-3xl font-serif text-white leading-tight mb-6 group-hover:text-zinc-200 transition-colors duration-700">
+                            <h3 className="text-lg md:text-xl font-serif text-white leading-tight mb-4 group-hover:text-zinc-200 transition-colors duration-700">
                               {item.name}
                             </h3>
                             <div className="flex items-center justify-between">

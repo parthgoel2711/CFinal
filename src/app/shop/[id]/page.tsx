@@ -29,6 +29,7 @@ export default function ProductDetail() {
   const [sizingMode, setSizingMode] = useState<"standard" | "custom">("standard");
   const [customMeasurements, setCustomMeasurements] = useState<CustomMeasurements | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSizeChartOpen, setIsSizeChartOpen] = useState(false);
 
   // Sizing Modal Form States
   const [unit, setUnit] = useState<"in" | "cm">("in");
@@ -101,22 +102,22 @@ export default function ProductDetail() {
       <Navbar />
 
       <motion.main 
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className="relative pt-32 pb-24 px-4 sm:px-6 max-w-[1600px] mx-auto min-h-screen flex flex-col lg:flex-row gap-10 lg:gap-16 lg:items-start"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
+        className="relative pt-20 md:pt-24 pb-24 px-4 sm:px-6 max-w-[1600px] mx-auto min-h-screen flex flex-col lg:flex-row gap-10 lg:gap-16 lg:items-start"
       >
         {/* Back to Collection Button */}
         <button 
           onClick={() => router.back()}
-          className="absolute top-28 right-4 sm:right-6 text-[#4B5563] hover:text-[#111111] transition-colors p-2 z-30 bg-white/40 backdrop-blur-sm border border-[#E5E5E5] rounded-full hover:border-[#111111] flex items-center justify-center shadow-lg cursor-pointer"
+          className="absolute top-16 md:top-20 right-4 sm:right-6 text-[#4B5563] hover:text-[#111111] transition-colors p-2 z-30 bg-white/40 backdrop-blur-sm border border-[#E5E5E5] rounded-full hover:border-[#111111] flex items-center justify-center shadow-lg cursor-pointer"
           aria-label="Back to Collection"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Left Side: Images */}
-        <div className="w-full lg:w-1/2 flex flex-col-reverse lg:flex-row gap-4 lg:gap-6 lg:sticky lg:top-32">
+        <div className="w-full lg:w-1/2 flex flex-col-reverse lg:flex-row gap-4 lg:gap-6 lg:sticky lg:top-20">
           {/* Thumbnail Gallery */}
           <div className="flex lg:flex-col gap-4 overflow-x-auto lg:overflow-y-auto lg:w-24 shrink-0 no-scrollbar pb-2 lg:pb-0">
             {product.images.map((img, idx) => (
@@ -139,7 +140,7 @@ export default function ProductDetail() {
         </div>
 
         {/* Right Side: Details */}
-        <div className="w-full lg:w-1/2 flex flex-col lg:overflow-y-auto lg:pr-4 lg:max-h-[85vh] no-scrollbar">
+        <div className="w-full lg:w-1/2 flex flex-col">
           <span className="text-[#111111] text-sm uppercase tracking-[0.2em] mb-4 block">
             {product.category}
           </span>
@@ -148,13 +149,18 @@ export default function ProductDetail() {
           </h1>
           <button 
             onClick={() => {
-              if (!user) {
-                setIsAuthOpen(true);
-                return;
-              }
               const WHATSAPP_NUMBER = "919122782023";
               const message = `Hello, I would like to quickly enquire about this product:\n\n*Product:* ${product.name}\n*Style Code:* ${product.styleCode || 'N/A'}\n\nCould you please provide more information? Thank you!`;
               const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+
+              if (!user) {
+                const hasPoppedEnquiry = localStorage.getItem("hasClickedEnquiryAuth");
+                if (!hasPoppedEnquiry) {
+                  setIsAuthOpen(true);
+                  localStorage.setItem("hasClickedEnquiryAuth", "true");
+                  return;
+                }
+              }
               window.open(url, "_blank");
             }}
             className="text-xl font-medium text-[#111111] hover:text-[#4B5563] transition-colors mb-8 tracking-widest uppercase text-left cursor-pointer focus:outline-none"
@@ -192,7 +198,12 @@ export default function ProductDetail() {
               <>
                 <div className="flex justify-between items-end mb-4">
                   <span className="text-xs uppercase tracking-widest text-[#4B5563] font-medium">Select Standard Size</span>
-                  <button className="text-xs text-[#111111] uppercase tracking-wider underline cursor-pointer">Size Guide</button>
+                  <button 
+                    onClick={() => setIsSizeChartOpen(true)}
+                    className="text-xs text-[#111111] uppercase tracking-wider underline cursor-pointer"
+                  >
+                    Size Guide
+                  </button>
                 </div>
                 <div className="flex flex-wrap gap-3">
                   {sizes.map((s) => (
@@ -211,7 +222,7 @@ export default function ProductDetail() {
                 </div>
               </>
             ) : (
-              <div className="bg-gradient-to-br from-[#0E0E0E] via-[#0B0B0B] to-[#070707] border border-[#E5E5E5] hover:border-[#111111]/30 p-6 rounded-sm shadow-[0_4px_30px_rgba(0,0,0,0.4)] transition-all duration-500 ease-out hover:shadow-[0_0_25px_rgba(198,168,124,0.03)] group/sizing">
+              <div className="bg-[#F9FAFB] border border-[#E5E5E5] p-6 rounded-sm transition-all duration-300 group/sizing">
                 <div className="flex justify-between items-start mb-6">
                   <div>
                     <h3 className="text-[#111111] font-serif text-sm uppercase tracking-[0.1em] flex items-center gap-2">
@@ -237,37 +248,37 @@ export default function ProductDetail() {
                           <span className="text-[#111111] block mb-3 uppercase tracking-[0.2em] text-[9px] font-semibold border-b border-[#E5E5E5]/40 pb-2">Top Specifications</span>
                           <div className="grid grid-cols-2 gap-x-3 gap-y-2 text-xs">
                             {customMeasurements.top.topLength && (
-                              <div className="flex flex-col bg-[#0F0F0F]/60 px-3 py-1.5 border border-[#E5E5E5]/40 rounded-sm">
+                              <div className="flex flex-col bg-[#F3F4F6] px-3 py-1.5 border border-[#E5E5E5]/40 rounded-sm">
                                 <span className="text-[#6B7280] text-[8px] uppercase tracking-wider">Top Length</span>
                                 <span className="text-[#111111] font-medium mt-0.5">{customMeasurements.top.topLength}{customMeasurements.unit}</span>
                               </div>
                             )}
                             {customMeasurements.top.chest && (
-                              <div className="flex flex-col bg-[#0F0F0F]/60 px-3 py-1.5 border border-[#E5E5E5]/40 rounded-sm">
+                              <div className="flex flex-col bg-[#F3F4F6] px-3 py-1.5 border border-[#E5E5E5]/40 rounded-sm">
                                 <span className="text-[#6B7280] text-[8px] uppercase tracking-wider">Chest</span>
                                 <span className="text-[#111111] font-medium mt-0.5">{customMeasurements.top.chest}{customMeasurements.unit}</span>
                               </div>
                             )}
                             {customMeasurements.top.tummy && (
-                              <div className="flex flex-col bg-[#0F0F0F]/60 px-3 py-1.5 border border-[#E5E5E5]/40 rounded-sm">
+                              <div className="flex flex-col bg-[#F3F4F6] px-3 py-1.5 border border-[#E5E5E5]/40 rounded-sm">
                                 <span className="text-[#6B7280] text-[8px] uppercase tracking-wider">Tummy</span>
                                 <span className="text-[#111111] font-medium mt-0.5">{customMeasurements.top.tummy}{customMeasurements.unit}</span>
                               </div>
                             )}
                             {customMeasurements.top.hip && (
-                              <div className="flex flex-col bg-[#0F0F0F]/60 px-3 py-1.5 border border-[#E5E5E5]/40 rounded-sm">
+                              <div className="flex flex-col bg-[#F3F4F6] px-3 py-1.5 border border-[#E5E5E5]/40 rounded-sm">
                                 <span className="text-[#6B7280] text-[8px] uppercase tracking-wider">Hip</span>
                                 <span className="text-[#111111] font-medium mt-0.5">{customMeasurements.top.hip}{customMeasurements.unit}</span>
                               </div>
                             )}
                             {customMeasurements.top.shoulder && (
-                              <div className="flex flex-col bg-[#0F0F0F]/60 px-3 py-1.5 border border-[#E5E5E5]/40 rounded-sm">
+                              <div className="flex flex-col bg-[#F3F4F6] px-3 py-1.5 border border-[#E5E5E5]/40 rounded-sm">
                                 <span className="text-[#6B7280] text-[8px] uppercase tracking-wider">Shoulder</span>
                                 <span className="text-[#111111] font-medium mt-0.5">{customMeasurements.top.shoulder}{customMeasurements.unit}</span>
                               </div>
                             )}
                             {customMeasurements.top.sleeve && (
-                              <div className="flex flex-col bg-[#0F0F0F]/60 px-3 py-1.5 border border-[#E5E5E5]/40 rounded-sm">
+                              <div className="flex flex-col bg-[#F3F4F6] px-3 py-1.5 border border-[#E5E5E5]/40 rounded-sm">
                                 <span className="text-[#6B7280] text-[8px] uppercase tracking-wider">Sleeve</span>
                                 <span className="text-[#111111] font-medium mt-0.5">{customMeasurements.top.sleeve}{customMeasurements.unit}</span>
                               </div>
@@ -280,25 +291,25 @@ export default function ProductDetail() {
                           <span className="text-[#111111] block mb-3 uppercase tracking-[0.2em] text-[9px] font-semibold border-b border-[#E5E5E5]/40 pb-2">Bottom Specifications</span>
                           <div className="grid grid-cols-2 gap-x-3 gap-y-2 text-xs">
                             {customMeasurements.bottom.bottomLength && (
-                              <div className="flex flex-col bg-[#0F0F0F]/60 px-3 py-1.5 border border-[#E5E5E5]/40 rounded-sm">
+                              <div className="flex flex-col bg-[#F3F4F6] px-3 py-1.5 border border-[#E5E5E5]/40 rounded-sm">
                                 <span className="text-[#6B7280] text-[8px] uppercase tracking-wider">Length</span>
                                 <span className="text-[#111111] font-medium mt-0.5">{customMeasurements.bottom.bottomLength}{customMeasurements.unit}</span>
                               </div>
                             )}
                             {customMeasurements.bottom.waist && (
-                              <div className="flex flex-col bg-[#0F0F0F]/60 px-3 py-1.5 border border-[#E5E5E5]/40 rounded-sm">
+                              <div className="flex flex-col bg-[#F3F4F6] px-3 py-1.5 border border-[#E5E5E5]/40 rounded-sm">
                                 <span className="text-[#6B7280] text-[8px] uppercase tracking-wider">Waist</span>
                                 <span className="text-[#111111] font-medium mt-0.5">{customMeasurements.bottom.waist}{customMeasurements.unit}</span>
                               </div>
                             )}
                             {customMeasurements.bottom.hip && (
-                              <div className="flex flex-col bg-[#0F0F0F]/60 px-3 py-1.5 border border-[#E5E5E5]/40 rounded-sm">
+                              <div className="flex flex-col bg-[#F3F4F6] px-3 py-1.5 border border-[#E5E5E5]/40 rounded-sm">
                                 <span className="text-[#6B7280] text-[8px] uppercase tracking-wider">Hip</span>
                                 <span className="text-[#111111] font-medium mt-0.5">{customMeasurements.bottom.hip}{customMeasurements.unit}</span>
                               </div>
                             )}
                             {customMeasurements.bottom.thigh && (
-                              <div className="flex flex-col bg-[#0F0F0F]/60 px-3 py-1.5 border border-[#E5E5E5]/40 rounded-sm">
+                              <div className="flex flex-col bg-[#F3F4F6] px-3 py-1.5 border border-[#E5E5E5]/40 rounded-sm">
                                 <span className="text-[#6B7280] text-[8px] uppercase tracking-wider">Thigh</span>
                                 <span className="text-[#111111] font-medium mt-0.5">{customMeasurements.bottom.thigh}{customMeasurements.unit}</span>
                               </div>
@@ -315,7 +326,7 @@ export default function ProductDetail() {
                     )}
                   </div>
                 ) : (
-                  <div className="flex flex-col items-center justify-center py-8 px-4 border border-[#E5E5E5]/60 rounded-sm bg-[#080808]/80 backdrop-blur-sm mt-3 relative overflow-hidden group/empty">
+                  <div className="flex flex-col items-center justify-center py-8 px-4 border border-[#E5E5E5]/60 rounded-sm bg-white mt-3 relative overflow-hidden group/empty">
                     <div className="absolute -top-12 -left-12 w-24 h-24 bg-[#111111]/5 rounded-full blur-2xl pointer-events-none transition-all duration-1000 group-hover/empty:scale-150" />
                     <div className="w-12 h-12 rounded-full bg-[#F3F4F6] border border-[#111111]/10 flex items-center justify-center mb-4 group-hover/empty:border-[#111111]/30 transition-colors duration-500">
                       <Ruler className="w-5 h-5 text-[#111111] opacity-80 group-hover/empty:scale-110 transition-transform duration-500" />
@@ -413,8 +424,12 @@ export default function ProductDetail() {
                   `Could you please provide more information? Thank you!`;
 
                 if (!user) {
-                  setIsAuthOpen(true);
-                  return;
+                  const hasPoppedEnquiry = localStorage.getItem("hasClickedEnquiryAuth");
+                  if (!hasPoppedEnquiry) {
+                    setIsAuthOpen(true);
+                    localStorage.setItem("hasClickedEnquiryAuth", "true");
+                    return;
+                  }
                 }
 
                 const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
@@ -450,148 +465,6 @@ export default function ProductDetail() {
             </div>
           </div>
 
-          {/* Size Chart Table */}
-          <div className="border-t border-[#E5E5E5] mt-12 pt-12">
-            <h3 className="text-xl font-serif text-[#111111] mb-6 uppercase text-center">TOP (Sherwani, Jacket, Kurta)</h3>
-            <div className="overflow-x-auto">
-              <table className="w-full text-center border-collapse border border-[#D6D6D6] text-sm text-[#4B5563]">
-                <thead>
-                  <tr className="bg-[#F3F4F6]">
-                    <th className="border border-[#D6D6D6] py-3 px-4 font-medium text-[#111111] uppercase tracking-wider"></th>
-                    <th className="border border-[#D6D6D6] py-3 px-4 font-medium text-[#111111] uppercase tracking-wider">S</th>
-                    <th className="border border-[#D6D6D6] py-3 px-4 font-medium text-[#111111] uppercase tracking-wider">M</th>
-                    <th className="border border-[#D6D6D6] py-3 px-4 font-medium text-[#111111] uppercase tracking-wider">L</th>
-                    <th className="border border-[#D6D6D6] py-3 px-4 font-medium text-[#111111] uppercase tracking-wider">XL</th>
-                    <th className="border border-[#D6D6D6] py-3 px-4 font-medium text-[#111111] uppercase tracking-wider">XXL</th>
-                    <th className="border border-[#D6D6D6] py-3 px-4 font-medium text-[#111111] uppercase tracking-wider">XXXL</th>
-                    <th className="border border-[#D6D6D6] py-3 px-4 font-medium text-[#111111] uppercase tracking-wider">Custom</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td className="border border-[#D6D6D6] py-3 px-4 text-[#111111] font-medium uppercase tracking-wider">Top Length</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">28</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">29</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">30</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">31</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">32</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">33</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4" rowSpan={6}>
-                      <Link href="/#contact" className="text-[#111111] hover:text-[#111111] transition-colors underline uppercase tracking-wider text-xs font-semibold cursor-pointer">
-                        Contact us
-                      </Link>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="border border-[#D6D6D6] py-3 px-4 text-[#111111] font-medium uppercase tracking-wider">Chest</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">36</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">38</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">40</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">42</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">44</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">46</td>
-                  </tr>
-                  <tr>
-                    <td className="border border-[#D6D6D6] py-3 px-4 text-[#111111] font-medium uppercase tracking-wider">Tummy</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">32</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">34</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">36</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">38</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">40</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">42</td>
-                  </tr>
-                  <tr>
-                    <td className="border border-[#D6D6D6] py-3 px-4 text-[#111111] font-medium uppercase tracking-wider">Hip</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">36</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">38</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">40</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">42</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">44</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">46</td>
-                  </tr>
-                  <tr>
-                    <td className="border border-[#D6D6D6] py-3 px-4 text-[#111111] font-medium uppercase tracking-wider">Shoulder</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">16</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">17</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">18</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">19</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">20</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">21</td>
-                  </tr>
-                  <tr>
-                    <td className="border border-[#D6D6D6] py-3 px-4 text-[#111111] font-medium uppercase tracking-wider">Sleeve</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">24</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">24.5</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">25</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">25.5</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">26</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">26.5</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            
-            <h3 className="text-xl font-serif text-[#111111] mb-6 mt-12 uppercase text-center">BOTTOM (Trouser, Churidar)</h3>
-            <div className="overflow-x-auto mb-12">
-              <table className="w-full text-center border-collapse border border-[#D6D6D6] text-sm text-[#4B5563]">
-                <thead>
-                  <tr className="bg-[#F3F4F6]">
-                    <th className="border border-[#D6D6D6] py-3 px-4 font-medium text-[#111111] uppercase tracking-wider"></th>
-                    <th className="border border-[#D6D6D6] py-3 px-4 font-medium text-[#111111] uppercase tracking-wider">S</th>
-                    <th className="border border-[#D6D6D6] py-3 px-4 font-medium text-[#111111] uppercase tracking-wider">M</th>
-                    <th className="border border-[#D6D6D6] py-3 px-4 font-medium text-[#111111] uppercase tracking-wider">L</th>
-                    <th className="border border-[#D6D6D6] py-3 px-4 font-medium text-[#111111] uppercase tracking-wider">XL</th>
-                    <th className="border border-[#D6D6D6] py-3 px-4 font-medium text-[#111111] uppercase tracking-wider">XXL</th>
-                    <th className="border border-[#D6D6D6] py-3 px-4 font-medium text-[#111111] uppercase tracking-wider">XXXL</th>
-                    <th className="border border-[#D6D6D6] py-3 px-4 font-medium text-[#111111] uppercase tracking-wider">Custom</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td className="border border-[#D6D6D6] py-3 px-4 text-[#111111] font-medium uppercase tracking-wider">Length</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">38</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">39</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">40</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">41</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">42</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">43</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4" rowSpan={4}>
-                      <Link href="/#contact" className="text-[#111111] hover:text-[#111111] transition-colors underline uppercase tracking-wider text-xs font-semibold cursor-pointer">
-                        Contact us
-                      </Link>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="border border-[#D6D6D6] py-3 px-4 text-[#111111] font-medium uppercase tracking-wider">Waist</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">32</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">34</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">36</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">38</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">40</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">42</td>
-                  </tr>
-                  <tr>
-                    <td className="border border-[#D6D6D6] py-3 px-4 text-[#111111] font-medium uppercase tracking-wider">Hip</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">36</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">38</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">40</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">42</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">44</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">46</td>
-                  </tr>
-                  <tr>
-                    <td className="border border-[#D6D6D6] py-3 px-4 text-[#111111] font-medium uppercase tracking-wider">Thigh</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">22</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">23</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">24</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">25</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">26</td>
-                    <td className="border border-[#D6D6D6] py-3 px-4">27</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
         </div>
       </motion.main>
 
@@ -863,6 +736,188 @@ export default function ProductDetail() {
                   >
                     Save Size Profile
                   </button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+
+        {isSizeChartOpen && (
+          <div key="size-guide-modal-container" className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <motion.div
+              key="size-guide-backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsSizeChartOpen(false)}
+              className="absolute inset-0 bg-[#111111]/50 backdrop-blur-md"
+            />
+            
+            {/* Modal Body */}
+            <motion.div
+              key="size-guide-content"
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              className="relative w-full max-w-4xl bg-white border border-[#E5E5E5] shadow-2xl rounded-sm overflow-hidden z-10 p-6 md:p-10 max-h-[90vh] overflow-y-auto no-scrollbar"
+            >
+              {/* Close Button */}
+              <button 
+                onClick={() => setIsSizeChartOpen(false)}
+                className="absolute top-4 right-4 text-[#6B7280] hover:text-[#111111] transition-colors z-20 p-2 hover:bg-[#F3F4F6] rounded-full cursor-pointer"
+                aria-label="Close modal"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <h2 className="text-3xl font-serif text-[#111111] mb-8 text-center uppercase tracking-wider">Size Guide</h2>
+
+              {/* Size Chart Table */}
+              <div className="space-y-12">
+                <div>
+                  <h3 className="text-lg font-serif text-[#111111] mb-4 uppercase text-center tracking-wide">TOP (Sherwani, Jacket, Kurta)</h3>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-center border-collapse border border-[#D6D6D6] text-sm text-[#4B5563]">
+                      <thead>
+                        <tr className="bg-[#F3F4F6]">
+                          <th className="border border-[#D6D6D6] py-3 px-4 font-medium text-[#111111] uppercase tracking-wider"></th>
+                          <th className="border border-[#D6D6D6] py-3 px-4 font-medium text-[#111111] uppercase tracking-wider">S</th>
+                          <th className="border border-[#D6D6D6] py-3 px-4 font-medium text-[#111111] uppercase tracking-wider">M</th>
+                          <th className="border border-[#D6D6D6] py-3 px-4 font-medium text-[#111111] uppercase tracking-wider">L</th>
+                          <th className="border border-[#D6D6D6] py-3 px-4 font-medium text-[#111111] uppercase tracking-wider">XL</th>
+                          <th className="border border-[#D6D6D6] py-3 px-4 font-medium text-[#111111] uppercase tracking-wider">XXL</th>
+                          <th className="border border-[#D6D6D6] py-3 px-4 font-medium text-[#111111] uppercase tracking-wider">XXXL</th>
+                          <th className="border border-[#D6D6D6] py-3 px-4 font-medium text-[#111111] uppercase tracking-wider">Custom</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td className="border border-[#D6D6D6] py-3 px-4 text-[#111111] font-medium uppercase tracking-wider">Top Length</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">28</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">29</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">30</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">31</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">32</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">33</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4" rowSpan={6}>
+                            <Link href="/#contact" onClick={() => setIsSizeChartOpen(false)} className="text-[#111111] hover:text-[#111111] transition-colors underline uppercase tracking-wider text-xs font-semibold cursor-pointer">
+                              Contact us
+                            </Link>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="border border-[#D6D6D6] py-3 px-4 text-[#111111] font-medium uppercase tracking-wider">Chest</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">36</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">38</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">40</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">42</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">44</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">46</td>
+                        </tr>
+                        <tr>
+                          <td className="border border-[#D6D6D6] py-3 px-4 text-[#111111] font-medium uppercase tracking-wider">Tummy</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">32</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">34</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">36</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">38</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">40</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">42</td>
+                        </tr>
+                        <tr>
+                          <td className="border border-[#D6D6D6] py-3 px-4 text-[#111111] font-medium uppercase tracking-wider">Hip</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">36</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">38</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">40</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">42</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">44</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">46</td>
+                        </tr>
+                        <tr>
+                          <td className="border border-[#D6D6D6] py-3 px-4 text-[#111111] font-medium uppercase tracking-wider">Shoulder</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">16</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">17</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">18</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">19</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">20</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">21</td>
+                        </tr>
+                        <tr>
+                          <td className="border border-[#D6D6D6] py-3 px-4 text-[#111111] font-medium uppercase tracking-wider">Sleeve</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">24</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">24.5</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">25</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">25.5</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">26</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">26.5</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-serif text-[#111111] mb-4 uppercase text-center tracking-wide">BOTTOM (Trouser, Churidar)</h3>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-center border-collapse border border-[#D6D6D6] text-sm text-[#4B5563]">
+                      <thead>
+                        <tr className="bg-[#F3F4F6]">
+                          <th className="border border-[#D6D6D6] py-3 px-4 font-medium text-[#111111] uppercase tracking-wider"></th>
+                          <th className="border border-[#D6D6D6] py-3 px-4 font-medium text-[#111111] uppercase tracking-wider">S</th>
+                          <th className="border border-[#D6D6D6] py-3 px-4 font-medium text-[#111111] uppercase tracking-wider">M</th>
+                          <th className="border border-[#D6D6D6] py-3 px-4 font-medium text-[#111111] uppercase tracking-wider">L</th>
+                          <th className="border border-[#D6D6D6] py-3 px-4 font-medium text-[#111111] uppercase tracking-wider">XL</th>
+                          <th className="border border-[#D6D6D6] py-3 px-4 font-medium text-[#111111] uppercase tracking-wider">XXL</th>
+                          <th className="border border-[#D6D6D6] py-3 px-4 font-medium text-[#111111] uppercase tracking-wider">XXXL</th>
+                          <th className="border border-[#D6D6D6] py-3 px-4 font-medium text-[#111111] uppercase tracking-wider">Custom</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td className="border border-[#D6D6D6] py-3 px-4 text-[#111111] font-medium uppercase tracking-wider">Length</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">38</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">39</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">40</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">41</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">42</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">43</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4" rowSpan={4}>
+                            <Link href="/#contact" onClick={() => setIsSizeChartOpen(false)} className="text-[#111111] hover:text-[#111111] transition-colors underline uppercase tracking-wider text-xs font-semibold cursor-pointer">
+                              Contact us
+                            </Link>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="border border-[#D6D6D6] py-3 px-4 text-[#111111] font-medium uppercase tracking-wider">Waist</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">32</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">34</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">36</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">38</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">40</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">42</td>
+                        </tr>
+                        <tr>
+                          <td className="border border-[#D6D6D6] py-3 px-4 text-[#111111] font-medium uppercase tracking-wider">Hip</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">36</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">38</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">40</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">42</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">44</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">46</td>
+                        </tr>
+                        <tr>
+                          <td className="border border-[#D6D6D6] py-3 px-4 text-[#111111] font-medium uppercase tracking-wider">Thigh</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">22</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">23</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">24</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">25</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">26</td>
+                          <td className="border border-[#D6D6D6] py-3 px-4">27</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </motion.div>
