@@ -37,12 +37,12 @@ export default function Navbar() {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="fixed w-full z-40 bg-white/90 backdrop-blur-md border-b border-[#E5E5E5]"
+        className="fixed w-full z-40 bg-white/70 backdrop-blur-xl border-b border-[#111111]/5 transition-all duration-500"
       >
-        <div className="max-w-[1600px] mx-auto px-6 h-28 flex items-center justify-between">
-          <div className="flex items-center gap-10">
-            <Link href="/" aria-label="Genial Stoffa Home" className="flex items-center gap-5 group">
-              <div className="relative h-24 w-24 group-hover:opacity-80 transition-opacity duration-300">
+        <div className="max-w-[1600px] mx-auto px-4 md:px-8 h-20 md:h-24 flex items-center justify-between">
+          <div className="flex items-center gap-3 md:gap-8">
+            <Link href="/" aria-label="Genial Stoffa Home" className="flex items-center gap-2 md:gap-4 group">
+              <div className="relative h-20 w-20 md:h-24 md:w-24 group-hover:opacity-80 transition-opacity duration-300 flex-shrink-0">
                 <Image
                   src="/logo-21.png"
                   alt="Genial Stoffa Logo"
@@ -51,26 +51,26 @@ export default function Navbar() {
                   priority
                 />
               </div>
-              <span className="text-xl md:text-2xl font-serif text-[#111111] tracking-widest uppercase font-medium">
+              <span className="hidden sm:block text-base sm:text-xl md:text-[1.35rem] font-serif text-[#111111] tracking-[0.2em] uppercase font-medium">
                 Genial Stoffa
               </span>
             </Link>
-            <div className="hidden md:flex items-center gap-8">
-              <Link href="/shop" className="text-sm font-medium uppercase tracking-[0.1em] text-[#4B5563] hover:text-[#111111] transition-colors relative after:absolute after:-bottom-1 after:left-0 after:h-[1px] after:w-0 after:bg-[#111111] hover:after:w-full after:transition-all after:duration-300">
+            <div className="hidden md:flex items-center gap-10 ml-4">
+              <Link href="/shop" className="text-xs font-medium uppercase tracking-[0.15em] text-[#4B5563] hover:text-[#111111] transition-colors relative after:absolute after:-bottom-1.5 after:left-0 after:h-[1px] after:w-0 after:bg-[#111111] hover:after:w-full after:transition-all after:duration-500 ease-out">
                 Collection
               </Link>
-              <Link href="/#contact" className="text-sm font-medium uppercase tracking-[0.1em] text-[#4B5563] hover:text-[#111111] transition-colors relative after:absolute after:-bottom-1 after:left-0 after:h-[1px] after:w-0 after:bg-[#111111] hover:after:w-full after:transition-all after:duration-300">
+              <Link href="/#contact" className="text-xs font-medium uppercase tracking-[0.15em] text-[#4B5563] hover:text-[#111111] transition-colors relative after:absolute after:-bottom-1.5 after:left-0 after:h-[1px] after:w-0 after:bg-[#111111] hover:after:w-full after:transition-all after:duration-500 ease-out">
                 Contact Us
               </Link>
             </div>
           </div>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-2 sm:gap-4 md:gap-8">
             {/* User Session Menu */}
             {user ? (
               <div className="relative">
                 <button
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="flex items-center gap-2 text-[#4B5563] hover:text-[#111111] transition-colors p-2 text-sm uppercase tracking-wider font-medium cursor-pointer relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-0 after:bg-[#111111] hover:after:w-full after:transition-all after:duration-300"
+                  className="flex items-center gap-2 text-[#4B5563] hover:text-[#111111] transition-colors p-2 text-xs uppercase tracking-[0.15em] font-medium cursor-pointer relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-0 after:bg-[#111111] hover:after:w-full after:transition-all after:duration-500 ease-out"
                 >
                   <User className="w-5 h-5" />
                   <span className="hidden sm:inline">{user.name || user.username}</span>
@@ -125,11 +125,11 @@ export default function Navbar() {
             {/* Shopping Cart Trigger */}
             <button
               onClick={() => setIsCartOpen(true)}
-              className="relative text-[#4B5563] hover:text-[#111111] transition-colors p-2 cursor-pointer after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-0 after:bg-[#111111] hover:after:w-full after:transition-all after:duration-300"
+              className="relative text-[#4B5563] hover:text-[#111111] transition-colors p-2 cursor-pointer after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-0 after:bg-[#111111] hover:after:w-full after:transition-all after:duration-500 ease-out"
             >
-              <ShoppingBag className="w-6 h-6" />
+              <ShoppingBag className="w-5 h-5" />
               {cartItemCount > 0 && (
-                <span className="absolute top-0 right-0 bg-[#111111] text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                <span className="absolute -top-1 -right-1 bg-[#111111] text-white text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
                   {cartItemCount}
                 </span>
               )}
@@ -137,7 +137,7 @@ export default function Navbar() {
             
             <button
               onClick={() => setIsModalOpen(true)}
-              className="hidden md:inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.2em] hover:text-[#111111] transition-colors text-[#111111] cursor-pointer relative after:absolute after:-bottom-1 after:left-0 after:h-[1px] after:w-0 after:bg-[#111111] hover:after:w-full after:transition-all after:duration-300"
+              className="hidden md:inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.2em] hover:text-black/70 transition-colors text-[#111111] cursor-pointer relative after:absolute after:-bottom-1.5 after:left-0 after:h-[1px] after:w-0 after:bg-[#111111] hover:after:w-full after:transition-all after:duration-500 ease-out"
             >
               Consultation
             </button>

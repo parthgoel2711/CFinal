@@ -30,10 +30,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${montserrat.variable} ${cormorant.variable} h-full antialiased`}
+      className={`${montserrat.variable} ${cormorant.variable} h-full antialiased scroll-smooth`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col font-sans bg-white text-[#111111]" suppressHydrationWarning>
+      <body className="min-h-full flex flex-col font-sans bg-white text-[#111111] overflow-x-hidden w-full" suppressHydrationWarning>
         <AuthProvider>
           <CartProvider>
             {children}

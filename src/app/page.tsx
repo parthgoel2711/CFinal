@@ -66,7 +66,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-zinc-100 font-sans selection:bg-[#111111] selection:text-white">
+    <div className="min-h-screen bg-white text-zinc-100 font-sans selection:bg-[#111111] selection:text-white overflow-x-hidden w-full">
       <Navbar />
 
       {/* Hero Section */}
@@ -98,10 +98,10 @@ export default function Home() {
           <motion.span variants={fadeUpVariant} className="text-white text-xs md:text-sm uppercase tracking-[0.4em] mb-8 block drop-shadow-md">
             Master Tailors Since 1998
           </motion.span>
-          <motion.h1 variants={fadeUpVariant} className="text-5xl sm:text-6xl md:text-8xl lg:text-[7.5rem] font-serif text-white mb-12 leading-[1.05] max-w-5xl drop-shadow-lg tracking-tight">
-            Elevating Menswear to an <span className="italic">Art Form</span>
+          <motion.h1 variants={fadeUpVariant} className="text-4xl sm:text-5xl md:text-7xl lg:text-[6.5rem] font-serif text-white mb-8 md:mb-10 leading-[1.2] md:leading-[1.1] max-w-5xl drop-shadow-2xl tracking-normal">
+            Elevating Menswear to an <br className="sm:hidden" /><span className="italic font-light">Art Form</span>
           </motion.h1>
-          <motion.p variants={fadeUpVariant} className="text-lg md:text-xl text-zinc-300 mb-16 max-w-2xl font-light leading-loose drop-shadow-md">
+          <motion.p variants={fadeUpVariant} className="text-lg md:text-xl text-zinc-300/90 mb-16 max-w-2xl font-light leading-relaxed drop-shadow-md tracking-wide">
             Experience the pinnacle of bespoke tailoring. Handcrafted perfection, designed exclusively for your exact proportions and unparalleled style.
           </motion.p>
           <motion.button
@@ -109,10 +109,10 @@ export default function Home() {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => window.location.href = '/shop'}
-            className="group flex items-center gap-6 bg-transparent border border-white/80 text-white px-12 py-6 uppercase tracking-[0.25em] text-sm hover:bg-white hover:text-[#111111] hover:border-white transition-all duration-700 shadow-xl"
+            className="group flex items-center gap-4 md:gap-6 bg-transparent border border-white/50 text-white px-8 py-4 md:px-14 md:py-6 uppercase tracking-[0.25em] text-[10px] md:text-sm hover:bg-white hover:text-[#111111] hover:border-white transition-all duration-1000 ease-[0.16,1,0.3,1] shadow-2xl"
           >
             Explore Collection
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-3 transition-transform duration-700 ease-out" />
+            <ArrowRight className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-4 transition-transform duration-1000 ease-[0.16,1,0.3,1]" />
           </motion.button>
         </motion.div>
       </section>
@@ -231,18 +231,18 @@ export default function Home() {
                             src={item.image} 
                             alt={item.name} 
                             fill 
-                            className={`opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-[1.2s] ease-out ${
+                            className={`opacity-90 group-hover:opacity-100 group-hover:scale-110 transition-all duration-[2s] ease-[0.16,1,0.3,1] ${
                               item.category === "Accessories" ? "object-contain p-6" : "object-cover object-top"
                             }`} 
                           />
                           {/* Refined gradient — darker at bottom for text, subtle at top */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-[#050505]/90 via-[#050505]/20 to-transparent opacity-80 group-hover:opacity-70 transition-opacity duration-1000 pointer-events-none" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-[#050505]/90 via-[#050505]/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-[1.5s] pointer-events-none" />
                           
                           {/* Subtle gold border accent on hover */}
-                          <div className="absolute inset-0 border border-transparent group-hover:border-[#111111]/10 transition-all duration-[1.5s] pointer-events-none" />
+                          <div className="absolute inset-0 border border-transparent group-hover:border-[#111111]/20 transition-all duration-[2s] ease-[0.16,1,0.3,1] pointer-events-none" />
                           
                           {/* Rising gold line on hover */}
-                          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 group-hover:w-full h-[1px] bg-[#111111]/50 transition-all duration-[1.5s] ease-[0.16,1,0.3,1] pointer-events-none" />
+                          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 group-hover:w-full h-[1px] bg-[#111111]/40 transition-all duration-[1.5s] ease-[0.16,1,0.3,1] pointer-events-none" />
 
                           {/* Product Info Overlay */}
                           <div className="absolute bottom-0 left-0 right-0 p-8 md:p-10 z-20 pointer-events-none flex flex-col justify-end h-full">
