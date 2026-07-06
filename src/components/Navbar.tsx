@@ -92,10 +92,10 @@ export default function Navbar() {
             : "bg-white/70 backdrop-blur-xl border-b border-[#111111]/5"
         }`}
       >
-        <div className="max-w-[1600px] mx-auto px-4 md:px-8 h-12 md:h-14 flex items-center justify-between">
+        <div className="max-w-[1600px] mx-auto px-4 md:px-8 h-20 md:h-24 flex items-center justify-between">
           <div className="flex items-center gap-3 md:gap-6">
             <Link href="/" aria-label="Genial Stoffa Home" className="flex items-center gap-2 md:gap-3 group">
-              <div className="relative h-16 w-16 md:h-20 md:w-20 group-hover:opacity-80 transition-opacity duration-300 flex-shrink-0">
+              <div className="relative h-20 w-20 md:h-24 md:w-24 group-hover:opacity-80 transition-opacity duration-300 flex-shrink-0">
                 <Image
                   src="/logo-21.png"
                   alt="Genial Stoffa Logo"
