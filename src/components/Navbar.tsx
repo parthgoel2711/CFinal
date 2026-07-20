@@ -104,7 +104,7 @@ export default function Navbar() {
                   priority
                 />
               </div>
-              <span className={`text-xs sm:text-sm md:text-base font-serif tracking-[0.1em] sm:tracking-[0.2em] uppercase font-medium line-clamp-1 sm:line-clamp-none whitespace-nowrap transition-colors duration-500 ${textHeadingColor}`}>
+              <span className={`text-lg md:text-xl font-serif tracking-[0.1em] sm:tracking-[0.2em] uppercase font-medium line-clamp-1 sm:line-clamp-none whitespace-nowrap transition-colors duration-500 ${textHeadingColor}`}>
                 Genial Stoffa
               </span>
             </Link>
