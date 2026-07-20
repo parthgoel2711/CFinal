@@ -192,7 +192,7 @@ export default function Navbar() {
               onClick={() => setIsModalOpen(true)}
               className={`hidden md:inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.2em] transition-colors duration-500 cursor-pointer relative after:absolute after:-bottom-1.5 after:left-0 after:h-[1px] after:w-0 hover:after:w-full after:transition-all after:duration-500 ease-out ${textHeadingColor} ${activeUnderline}`}
             >
-              Consultation
+              Book Free Consultation
             </button>
 
             {/* Mobile Menu Toggle */}
@@ -236,7 +236,7 @@ export default function Navbar() {
                   }}
                   className="text-left text-sm font-medium uppercase tracking-[0.1em] text-[#111111]"
                 >
-                  Book Consultation
+                  Book Free Consultation
                 </button>
               </div>
             </motion.div>

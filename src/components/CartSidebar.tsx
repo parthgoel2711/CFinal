@@ -92,10 +92,19 @@ export default function CartSidebar() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "tween", ease: "easeInOut", duration: 0.4 }}
-              className="fixed top-0 right-0 h-full w-full max-w-md bg-[#FAFAFA] border-l border-[#E5E5E5] shadow-2xl z-50 flex flex-col"
+              className="fixed top-0 right-0 h-full w-full max-w-md bg-[#FAFAF8] border-l border-[#E5E5E5] shadow-[0_0_60px_rgba(0,0,0,0.15)] z-50 flex flex-col"
             >
-              <div className="flex items-center justify-between p-6 border-b border-[#E5E5E5]">
-                <h2 className="text-xl font-serif text-[#111111] tracking-widest uppercase">Your Cart</h2>
+              {/* Header */}
+              <div className="flex items-center justify-between px-6 py-5 border-b border-[#E5E5E5] bg-[#FAFAF8]">
+                <div className="flex items-center gap-3">
+                  <div className="w-7 h-7 border border-[#111111]/20 flex items-center justify-center">
+                    <span className="font-serif text-[10px] text-[#111111]">GS</span>
+                  </div>
+                  <div>
+                    <h2 className="text-sm font-medium text-[#111111] uppercase tracking-[0.25em]">Your Selection</h2>
+                    <p className="text-[#C9A84C] text-[9px] uppercase tracking-[0.2em]">Enquiry List</p>
+                  </div>
+                </div>
                 <button 
                   onClick={() => {
                     setIsCartOpen(false);
@@ -109,18 +118,29 @@ export default function CartSidebar() {
 
               <div className="flex-1 overflow-y-auto p-6">
                 {items.length === 0 ? (
-                  <div className="h-full flex flex-col items-center justify-center text-center">
-                    <p className="text-[#6B7280] font-light mb-4">Your collection is currently empty.</p>
-                    <button 
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    className="h-full flex flex-col items-center justify-center text-center gap-6"
+                  >
+                    <div className="w-20 h-20 border border-[#E5E5E5] flex items-center justify-center">
+                      <span className="font-serif text-2xl text-[#111111]/20">GS</span>
+                    </div>
+                    <div>
+                      <p className="text-[#111111] font-serif text-lg mb-2">Your selection is empty</p>
+                      <p className="text-[#9CA3AF] font-light text-sm">Discover our bespoke collection.</p>
+                    </div>
+                    <button
                       onClick={() => {
                         setIsCartOpen(false);
                         router.push("/shop");
                       }}
-                      className="text-[#111111] uppercase tracking-[0.1em] text-sm hover:text-[#111111] transition-colors border-b border-[#111111] pb-1 cursor-pointer"
+                      className="btn-liquid-dark inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-[#111111] hover:text-white border border-[#111111]/30 hover:border-[#111111] px-8 py-3 transition-all duration-700 font-medium"
                     >
-                      Continue Shopping
+                      Explore Collection
                     </button>
-                  </div>
+                  </motion.div>
                 ) : (
                   <div className="space-y-6">
                     {items.map((item) => (

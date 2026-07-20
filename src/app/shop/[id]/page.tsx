@@ -4,10 +4,11 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { ShoppingBag, X, Ruler, Check, LogIn } from "lucide-react";
+import { ShoppingBag, X, Ruler, Check, LogIn, ChevronRight, ChevronDown, ChevronUp, Home, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import AuthModal from "@/components/AuthModal";
+import ScrollProgress from "@/components/ScrollProgress";
 import { useCart, CustomMeasurements } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import { products } from "@/data/products";
@@ -24,6 +25,7 @@ export default function ProductDetail() {
   const [mainImage, setMainImage] = useState<string>(product?.image || "");
   const [quantity, setQuantity] = useState<number>(1);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [openAccordion, setOpenAccordion] = useState<string | null>(null);
 
   // Custom Sizing States
   const [sizingMode, setSizingMode] = useState<"standard" | "custom">("standard");
@@ -96,21 +98,39 @@ export default function ProductDetail() {
   };
 
 
+  const relatedProducts = products
+    .filter(p => p.id !== product.id && p.category === product.category)
+    .slice(0, 3);
+
   return (
-    <div className="min-h-screen bg-white text-zinc-100 font-sans selection:bg-[#111111] selection:text-white">
+    <div className="min-h-screen bg-[#FAFAF8] text-zinc-100 font-sans selection:bg-[#111111] selection:text-white">
+      <ScrollProgress />
       <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
       <Navbar />
 
-      <motion.main 
+      {/* WhatsApp Floating Button */}
+      <a
+        href={`https://wa.me/919122782023?text=${encodeURIComponent(`Hello, I'd like to enquire about: ${product.name} (${product.styleCode || 'N/A'})`)}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-[0_4px_20px_rgba(37,211,102,0.4)] hover:scale-110 hover:shadow-[0_4px_30px_rgba(37,211,102,0.6)] transition-all duration-300"
+        aria-label="Chat on WhatsApp"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+      </a>
+
+      <motion.main
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6 }}
         className="relative pt-20 md:pt-24 pb-24 px-4 sm:px-6 max-w-[1600px] mx-auto min-h-screen flex flex-col lg:flex-row gap-10 lg:gap-16 lg:items-start"
       >
         {/* Back to Collection Button */}
-        <button 
+        <button
           onClick={() => router.back()}
-          className="absolute top-16 md:top-20 right-4 sm:right-6 text-[#4B5563] hover:text-[#111111] transition-colors p-2 z-30 bg-white/40 backdrop-blur-sm border border-[#E5E5E5] rounded-full hover:border-[#111111] flex items-center justify-center shadow-lg cursor-pointer"
+          className="absolute top-16 md:top-20 right-4 sm:right-6 text-[#4B5563] hover:text-[#111111] transition-colors p-2 z-30 bg-white/60 backdrop-blur-sm border border-[#E5E5E5] rounded-full hover:border-[#111111] flex items-center justify-center shadow-lg cursor-pointer"
           aria-label="Back to Collection"
         >
           <X className="w-5 h-5" />
@@ -141,10 +161,20 @@ export default function ProductDetail() {
 
         {/* Right Side: Details */}
         <div className="w-full lg:w-1/2 flex flex-col">
-          <span className="text-[#111111] text-sm uppercase tracking-[0.2em] mb-4 block">
+
+          {/* Breadcrumb */}
+          <nav className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-[#9CA3AF] mb-6">
+            <Link href="/" className="hover:text-[#111111] transition-colors flex items-center gap-1"><Home className="w-3 h-3" />Home</Link>
+            <ChevronRight className="w-3 h-3" />
+            <Link href="/shop" className="hover:text-[#111111] transition-colors">Collection</Link>
+            <ChevronRight className="w-3 h-3" />
+            <span className="text-[#111111] truncate max-w-[160px]">{product.name}</span>
+          </nav>
+
+          <span className="text-[#C9A84C] text-[10px] uppercase tracking-[0.4em] mb-3 block">
             {product.category}
           </span>
-          <h1 className="text-4xl lg:text-5xl font-serif text-[#111111] mb-4 leading-tight">
+          <h1 className="text-4xl lg:text-5xl font-serif text-[#111111] mb-6 leading-tight">
             {product.name}
           </h1>
           <button 
@@ -444,29 +474,119 @@ export default function ProductDetail() {
             </button>
           </div>
 
-          {/* Details */}
-          <div className="border-t border-[#E5E5E5] pt-8 space-y-6 text-sm">
-            <p className="text-[#4B5563] font-light leading-relaxed mb-8">
-              <strong className="text-[#111111]">Description:</strong> {product.description}
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8 text-[#4B5563] font-light">
-              <p><strong className="text-[#111111] font-medium">Collection Name:</strong> {product.collectionName}</p>
-              <p><strong className="text-[#111111] font-medium">Work:</strong> {product.work}</p>
-              <p><strong className="text-[#111111] font-medium">Fabric:</strong> {product.fabric}</p>
-              <p><strong className="text-[#111111] font-medium">Color:</strong> {product.color}</p>
-              <p><strong className="text-[#111111] font-medium">No. of Components:</strong> {product.components}</p>
-              <p><strong className="text-[#111111] font-medium">Includes:</strong> {product.includes}</p>
-              <p><strong className="text-[#111111] font-medium">Fit:</strong> {product.fit}</p>
-              <p><strong className="text-[#111111] font-medium">Fabric Care:</strong> {product.fabricCare}</p>
-              <p><strong className="text-[#111111] font-medium">Style Code:</strong> {product.styleCode}</p>
-              <p><strong className="text-[#111111] font-medium">Availability:</strong> {product.availability}</p>
-              <p><strong className="text-[#111111] font-medium">Delivery time:</strong> {product.deliveryTime}</p>
-            </div>
+          {/* Craftsmanship Accordion */}
+          <div className="border-t border-[#E5E5E5] mt-4">
+            {[
+              {
+                key: "description",
+                label: "About This Piece",
+                content: (
+                  <p className="text-[#4B5563] font-light leading-relaxed text-sm">{product.description}</p>
+                )
+              },
+              {
+                key: "details",
+                label: "Craftsmanship Details",
+                content: (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 text-sm text-[#4B5563] font-light">
+                    <p><span className="text-[#111111] font-medium">Collection:</span> {product.collectionName}</p>
+                    <p><span className="text-[#111111] font-medium">Work:</span> {product.work}</p>
+                    <p><span className="text-[#111111] font-medium">Fabric:</span> {product.fabric}</p>
+                    <p><span className="text-[#111111] font-medium">Color:</span> {product.color}</p>
+                    <p><span className="text-[#111111] font-medium">Components:</span> {product.components}</p>
+                    <p><span className="text-[#111111] font-medium">Includes:</span> {product.includes}</p>
+                    <p><span className="text-[#111111] font-medium">Fit:</span> {product.fit}</p>
+                    <p><span className="text-[#111111] font-medium">Style Code:</span> {product.styleCode}</p>
+                  </div>
+                )
+              },
+              {
+                key: "care",
+                label: "Care Instructions",
+                content: (
+                  <p className="text-[#4B5563] font-light leading-relaxed text-sm">{product.fabricCare}</p>
+                )
+              },
+              {
+                key: "delivery",
+                label: "Delivery & Availability",
+                content: (
+                  <div className="space-y-3 text-sm">
+                    {product.availability === 'In Stock' && (
+                      <div className="flex items-center gap-3">
+                        <span className="text-[9px] uppercase tracking-[0.2em] px-2.5 py-1 font-medium badge-in-stock">In Stock</span>
+                      </div>
+                    )}
+                    <p className="text-[#4B5563] font-light">Estimated delivery: <span className="text-[#111111] font-medium">{product.deliveryTime}</span></p>
+                  </div>
+                )
+              }
+            ].map(({ key, label, content }) => (
+              <div key={key} className="border-b border-[#E5E5E5]">
+                <button
+                  onClick={() => setOpenAccordion(openAccordion === key ? null : key)}
+                  className="w-full flex items-center justify-between py-4 text-left cursor-pointer group"
+                >
+                  <span className="text-xs uppercase tracking-[0.2em] text-[#111111] font-medium group-hover:text-[#C9A84C] transition-colors duration-300">{label}</span>
+                  <motion.div
+                    animate={{ rotate: openAccordion === key ? 180 : 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <ChevronDown className="w-4 h-4 text-[#9CA3AF]" />
+                  </motion.div>
+                </button>
+                <AnimatePresence>
+                  {openAccordion === key && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                      className="overflow-hidden"
+                    >
+                      <div className="pb-6">{content}</div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ))}
           </div>
 
         </div>
       </motion.main>
+
+      {/* ── Complete the Look ──────────────────────────────── */}
+      {relatedProducts.length > 0 && (
+        <section className="py-24 px-6 border-t border-[#111111]/8 bg-white">
+          <div className="max-w-[1600px] mx-auto">
+            <div className="text-center mb-16">
+              <span className="text-[#C9A84C] text-[10px] uppercase tracking-[0.4em] mb-4 block">You May Also Like</span>
+              <h2 className="text-3xl md:text-4xl font-serif text-[#111111] tracking-tight">Complete the Look</h2>
+              <div className="luxury-divider mt-6" />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+              {relatedProducts.map((p) => (
+                <Link key={p.id} href={`/shop/${p.id}`} className="group flex flex-col">
+                  <div className="relative aspect-[3/4] w-full bg-[#F5F5F3] overflow-hidden img-zoom-container mb-5">
+                    <Image src={p.image} alt={p.name} fill className={`transition-all duration-1000 opacity-90 group-hover:opacity-100 ${p.category === 'Accessories' ? 'object-contain p-6' : 'object-cover object-top'}`} />
+                  </div>
+                  <div className="flex items-start justify-between px-1">
+                    <div>
+                      <span className="text-[#9CA3AF] text-[9px] uppercase tracking-[0.3em] block mb-1">{p.category}</span>
+                      <h3 className="text-sm font-serif text-[#111111] group-hover:text-[#4B5563] transition-colors leading-snug">{p.name}</h3>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+            <div className="text-center mt-16">
+              <Link href="/shop" className="btn-liquid-dark inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.25em] text-[#111111] hover:text-white border border-[#111111]/30 hover:border-[#111111] px-10 py-4 transition-all duration-700 font-medium">
+                View Full Collection <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       <AnimatePresence>
         {isModalOpen && (
@@ -501,7 +621,7 @@ export default function ProductDetail() {
               <div className="hidden md:block w-1/3 relative bg-[#F3F4F6] border-r border-[#E5E5E5] min-h-[400px]">
                 <Image 
                   src="/images/process_measurement.png" 
-                  alt="Measurement Guide" 
+                  alt="Genial Stoffa master tailor custom measurement fitting instructions guide" 
                   fill 
                   className="object-cover opacity-50"
                 />

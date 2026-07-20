@@ -119,7 +119,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10" />
               <Image
                 src="/images/hero_suit.png"
-                alt="Genial Stoffa Suit"
+                alt="Genial Stoffa bespoke luxury traditional and western menswear customer fitting account"
                 fill
                 className="object-cover opacity-60"
                 sizes="(max-width: 768px) 0vw, 40vw"
@@ -128,7 +128,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 <span className="text-zinc-300 text-[10px] uppercase tracking-[0.3em] mb-2 block drop-shadow-md">Sartorial Account</span>
                 <h3 className="text-2xl font-serif text-white mb-2 leading-tight drop-shadow-md">Synchronize Your Collection</h3>
                 <p className="text-zinc-300 text-xs font-light leading-relaxed drop-shadow-md">
-                  Log in to track your cart, measurements, and curated suits across all of your devices seamlessly.
+                  Log in to track your cart, measurements, and curated garments across all of your devices seamlessly.
                 </p>
               </div>
             </div>
@@ -151,6 +151,17 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                     exit={{ opacity: 0, x: -20 }}
                     transition={{ duration: 0.3 }}
                   >
+                    {/* Brand Tagline */}
+                    <div className="mb-6">
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-6 h-6 border border-[#111111]/20 flex items-center justify-center">
+                          <span className="font-serif text-[9px] text-[#111111]">GS</span>
+                        </div>
+                        <span className="text-[#C9A84C] text-[9px] uppercase tracking-[0.3em]">Genial Stoffa</span>
+                      </div>
+                      <h3 className="font-serif text-xl text-[#111111] leading-snug">Join the Genial Stoffa Circle</h3>
+                      <p className="text-[#9CA3AF] text-xs font-light mt-1">Save your cart, measurements & preferences across all devices.</p>
+                    </div>
                     {/* Tabs */}
                     <div className="flex gap-6 border-b border-[#E5E5E5] mb-5">
                       <button

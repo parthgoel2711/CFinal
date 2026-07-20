@@ -18,8 +18,8 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "Genial Stoffa | Bespoke Men's Suits",
-  description: "Premium bespoke men's suit factory delivering luxury, minimalist design and perfect fit.",
+  title: "Genial Stoffa | Bespoke Luxury Menswear",
+  description: "Premium bespoke tailoring offering luxury traditional & western menswear. Handcrafted design and a flawless fit.",
 };
 
 export default function RootLayout({
@@ -33,7 +33,7 @@ export default function RootLayout({
       className={`${montserrat.variable} ${cormorant.variable} h-full antialiased scroll-smooth`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col font-sans bg-white text-[#111111] overflow-x-hidden w-full" suppressHydrationWarning>
+      <body className="min-h-full flex flex-col font-sans bg-[#FAFAF8] text-[#111111] overflow-x-hidden w-full" suppressHydrationWarning>
         <AuthProvider>
           <CartProvider>
             {children}

@@ -2,7 +2,7 @@ export const categories = [
   "All",
   "Designer Suit",
   "Bandh Gala",
-  "Basic Suit",
+  "Classic Suits",
   "Sherwani",
   "Accessories"
 ];
@@ -112,7 +112,7 @@ export const products = [
     deliveryTime: "28 days"
   },
   { 
-    id: "sequin-lapel-blazer", 
+    id: "the-genial-signature-tuxedo", 
     name: "The Genial Signature Tuxedo", 
     category: "Designer Suit", 
     price: 1300, 
@@ -176,9 +176,9 @@ export const products = [
 
   // --- SLIDE 4: TIMELESS BESPOKE FORMALS ---
   { 
-    id: "genial-signature-tuxedo", 
+    id: "signature-suit", 
     name: "Signature Suit", 
-    category: "Basic Suit", 
+    category: "Classic Suits", 
     price: 1500, 
     image: "/images/AI_12.png",
     images: ["/images/AI_12.png"],
@@ -198,7 +198,7 @@ export const products = [
   { 
     id: "classic-shawl-tuxedo", 
     name: "Classic Shawl Lapel Tuxedo", 
-    category: "Basic Suit", 
+    category: "Classic Suits", 
     price: 1200, 
     image: "/images/AI_3.png",
     images: ["/images/AI_3.png"],
@@ -298,7 +298,7 @@ export const products = [
   { 
     id: "charcoal-sartorial-suit", 
     name: "Sartorial Charcoal Wool Suit", 
-    category: "Basic Suit", 
+    category: "Classic Suits", 
     price: 1250, 
     image: "/images/AI_17.png",
     images: ["/images/AI_17.png"],
